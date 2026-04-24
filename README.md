@@ -12,7 +12,7 @@
 |------|------|--------|
 | Von Andrei Lunar | Project Lead | [DreiLunar](https://github.com/DreiLunar) |
 | Christine Nicole Miranda | Frontend Developer | [tinintinti](https://github.com/tinintinti) |
-| R-Jay Arazula | Backend Developer | [Rjay29](https://github.com/Rjay29) |
+| R Jay Arazula | Backend Developer | [Rjay29](https://github.com/Rjay29) |
 
 ## 🎯 About the Project
 Wardrobe Maker is a full system with a **frontend UI and a C# backend**. Users can add clothing items, build outfits from their inventory, track laundry status, and save outfit combinations to a lookbook — all through an interactive graphical interface powered by object-oriented principles.

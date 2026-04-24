@@ -1,7 +1,7 @@
 # Wardrobe Maker 👗
-*A C# application for managing clothing inventory and outfits*
+*A C# system for managing clothing inventory and outfits*
 
-![Wardrobe Maker Banner](https://github.com/user-attachments/assets/02d504b1-e064-4587-a2d6-06c85d1f7d7b)
+<img src="https://github.com/user-attachments/assets/02d504b1-e064-4587-a2d6-06c85d1f7d7b" width="300"/>
 
 ## Group Information
 **Course:** AOOP  
@@ -14,7 +14,7 @@
 | Rjay Arazula | [Rjay29](https://github.com/Rjay29) |
 
 ## 🎯 About the Project
-Wardrobe Maker is a full application with a **frontend UI and a C# backend**. Users can add clothing items, build outfits from their inventory, track laundry status, and save outfit combinations to a lookbook — all through an interactive graphical interface powered by object-oriented principles.
+Wardrobe Maker is a full system with a **frontend UI and a C# backend**. Users can add clothing items, build outfits from their inventory, track laundry status, and save outfit combinations to a lookbook — all through an interactive graphical interface powered by object-oriented principles.
 
 ## ✨ Key Features
 - **6 Core Classes** built with inheritance and abstraction

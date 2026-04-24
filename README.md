@@ -46,14 +46,13 @@ WardrobeMaker/
 3. **Footwear** - Shoes and other footwear items; has `StyleCategory`
 
 ## 🚀 How to Run
-1. Ensure you have **.NET SDK** installed
-2. Clone/download the repository
-3. Open the solution file in **Visual Studio**
-4. Build and run the project:
+1. Clone/download the repository
+2. Open the solution file in **Visual Studio**
+3. Build and run the project:
    ```bash
    dotnet run
    ```
-5. The application window will launch — use the interface to:
+4. The application window will launch — use the interface to:
    - Add clothing items to your inventory
    - Build and save outfits to your lookbook
    - Toggle laundry status on any item
@@ -66,7 +65,7 @@ WardrobeMaker/
 
 ![Flowchart](images/flowchart.png)
 
-## 📋 Code Structure
+## 📋 Sample Code Structure
 
 ```csharp
 using System;

@@ -1,8 +1,7 @@
 # Wardrobe Maker 👗
-*A system for managing clothing inventory and outfits*
+*A C# application for managing clothing inventory and outfits*
 
-![Wardrobe Manager Banner](<img width="2000" height="2000" alt="666421362_1638199117302595_5378415429514602078_n" src="https://github.com/user-attachments/assets/02d504b1-e064-4587-a2d6-06c85d1f7d7b" />
-)
+![Wardrobe Maker Banner](https://github.com/user-attachments/assets/02d504b1-e064-4587-a2d6-06c85d1f7d7b)
 
 ## Group Information
 **Course:** AOOP  
@@ -15,15 +14,30 @@
 | Rjay Arazula | [Rjay29](https://github.com/Rjay29) |
 
 ## 🎯 About the Project
-This program simulates a wardrobe management system in a console environment. Users can add clothing items, build outfits from their inventory, track laundry status, and save outfit combinations to a lookbook — all using object-oriented principles in C#.
+Wardrobe Maker is a full application with a **frontend UI and a C# backend**. Users can add clothing items, build outfits from their inventory, track laundry status, and save outfit combinations to a lookbook — all through an interactive graphical interface powered by object-oriented principles.
 
 ## ✨ Key Features
 - **6 Core Classes** built with inheritance and abstraction
-- **Interactive Console Menu** for managing clothing and outfits
+- **Graphical User Interface** for an intuitive user experience
 - **Laundry Tracker** to toggle clean/dirty status per item
 - **Outfit Builder** combining tops, bottoms, and footwear
 - **Lookbook System** to save and schedule outfits
 - **Tag Filtering** to search items by color and style
+
+## 🗂️ Project Structure
+
+```
+WardrobeMaker/
+├── Frontend/          # UI layer (forms, views, controls)
+├── Backend/           # Core logic and class definitions
+│   ├── ClothingItem.cs
+│   ├── Top.cs
+│   ├── Bottom.cs
+│   ├── Footwear.cs
+│   ├── Outfit.cs
+│   └── WardrobeManager.cs
+└── README.md
+```
 
 ## 👔 Clothing Types
 1. **Top** - Clothing worn on the upper body (e.g., shirts, jackets); has `SleeveLength`
@@ -31,21 +45,21 @@ This program simulates a wardrobe management system in a console environment. Us
 3. **Footwear** - Shoes and other footwear items; has `StyleCategory`
 
 ## 🚀 How to Run
-1. Clone/download the repository
-2. Navigate to the project folder and run:
+1. Ensure you have **.NET SDK** installed
+2. Clone/download the repository
+3. Open the solution file in **Visual Studio**
+4. Build and run the project:
    ```bash
    dotnet run
    ```
-3. Follow the on-screen instructions:
-   - Enter a number to navigate the menu
+5. The application window will launch — use the interface to:
    - Add clothing items to your inventory
    - Build and save outfits to your lookbook
    - Toggle laundry status on any item
 
 ## 📊 Class Diagram
 
-![UML Class Diagram](<img width="886" height="594" alt="670021440_794225766780666_4276688024908435435_n" src="https://github.com/user-attachments/assets/d9bf4423-e3e0-45d5-bb76-6c941e61e1fc" />
-)
+![UML Class Diagram](https://github.com/user-attachments/assets/d9bf4423-e3e0-45d5-bb76-6c941e61e1fc)
 
 ## 🔀 Flowchart
 

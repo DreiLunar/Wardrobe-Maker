@@ -1,7 +1,8 @@
 # Wardrobe Maker 👗
 *A C# system for managing clothing inventory and outfits*
 
-<img src="images/banner.png" width="500"/>
+<<img width="2000" height="561" alt="banner" src="https://github.com/user-attachments/assets/eba08217-8bde-4f02-afd5-bd8e20e58182" />
+>
 
 ## Group Information
 **Course:** AOOP  

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WardrobeMaker
 {
@@ -131,38 +132,65 @@ namespace WardrobeMaker
             //Add the outfit to that day's stack
             ScheduledOutfits[date].Add(newOutfit);
         }
+    
+
+    public Outfit GenerateRandomOutfit(string newOutfitName)
+    {
+        //Create temporary lists to hold only CLEAN clothes
+        List<Top> cleanTops = new List<Top>();
+        List<Bottom> cleanBottoms = new List<Bottom>();
+        List<Footwear> cleanShoes = new List<Footwear>();
+
+        //Sort the inventory
+        foreach (var item in Inventory)
+        {
+            if (item.IsClean)
+            {
+                //The 'is' keyword safely checks what type of child class the item is
+                if (item is Top t) cleanTops.Add(t);
+                else if (item is Bottom b) cleanBottoms.Add(b);
+                else if (item is Footwear f) cleanShoes.Add(f);
+            }
+        }
+
+        //Safety Check: Do we have enough clean clothes to make a full outfit?
+        if (cleanTops.Count == 0 || cleanBottoms.Count == 0 || cleanShoes.Count == 0)
+        {
+            Console.WriteLine("[Error] Not enough clean clothes to generate a complete outfit!");
+            return null;
+        }
+
+        //Roll the dice to pick a random index from each list
+        Random rand = new Random();
+        Top randomTop = cleanTops[rand.Next(cleanTops.Count)];
+        Bottom randomBottom = cleanBottoms[rand.Next(cleanBottoms.Count)];
+        Footwear randomShoes = cleanShoes[rand.Next(cleanShoes.Count)];
+
+        //Assemble and return the final randomized outfit
+        return new Outfit(newOutfitName, randomTop, randomBottom, randomShoes);
     }
+}
 
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Wardrobe Maker Test: The Manager & Calendar ===\n");
+            Console.WriteLine("=== Wardrobe Maker Test: The Randomizer ===\n");
 
-            // 1. Boot up the system (This automatically loads the dummy data!)
             WardrobeManager appManager = new WardrobeManager();
-            Console.WriteLine($"[System] Successfully loaded {appManager.Inventory.Count} items into the closet.\n");
+            Console.WriteLine($"[System] Closet loaded with {appManager.Inventory.Count} items.\n");
 
-            // 2. Grab some clothes from the inventory to make two different outfits
-            Top jacket = (Top)appManager.Inventory[0];
-            Bottom jeans = (Bottom)appManager.Inventory[2];
-            Footwear boots = (Footwear)appManager.Inventory[4];
+            // 1. Generate two random outfits using our new method!
+            Outfit randomLook1 = appManager.GenerateRandomOutfit("Mystery Outfit A");
+            Outfit randomLook2 = appManager.GenerateRandomOutfit("Mystery Outfit B");
 
-            Top tee = (Top)appManager.Inventory[1];
-            Bottom chinos = (Bottom)appManager.Inventory[3];
-            Footwear sneakers = (Footwear)appManager.Inventory[5];
-
-            Outfit formalLook = new Outfit("Friday Night Casual", jacket, jeans, boots);
-            Outfit lazyLook = new Outfit("Sunday Errands", tee, chinos, sneakers);
-
-            // 3. Test the Calendar Stacking! Let's schedule BOTH for today.
+            // 2. Schedule them on the calendar
             DateTime today = DateTime.Today;
-            appManager.ScheduleOutfit(today, formalLook);
-            appManager.ScheduleOutfit(today, lazyLook);
+            appManager.ScheduleOutfit(today, randomLook1);
+            appManager.ScheduleOutfit(today, randomLook2);
 
-            // 4. Print the Calendar to prove they both stacked successfully
+            // 3. Print the results
             Console.WriteLine($"--- Calendar for {today.ToShortDateString()} ---");
-            Console.WriteLine($"Total Outfits Stacked: {appManager.ScheduledOutfits[today].Count}\n");
 
             foreach (var outfit in appManager.ScheduledOutfits[today])
             {
@@ -173,4 +201,4 @@ namespace WardrobeMaker
             }
         }
     }
-}    
+}

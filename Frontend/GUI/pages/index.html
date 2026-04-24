@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardrobe Maker | Home</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/index.css">
+</head>
+<body class="pb-20 bg-[#f9f7f4]">
+
+    <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-5 flex flex-col md:flex-row justify-between items-center sticky top-0 z-50 shadow-sm border-b border-[#e6e0d5]">
+        <div class="flex items-center gap-3 mb-4 md:mb-0">
+            <div class="text-[#8c7862] text-2xl"><i class="fas fa-tshirt"></i></div>
+            <span class="font-bold text-xl text-gray-800">Wardrobe Maker</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4 md:gap-10 text-gray-500 font-medium text-xs md:text-sm">
+            <a href="index.html" class="text-[#8c7862] bg-[#f2ede4] px-4 py-1.5 rounded-full flex items-center gap-2 font-bold shadow-sm">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="wardrobe.html" class="hover:text-[#8c7862] transition flex items-center gap-2"><i class="fas fa-vest"></i> Wardrobe</a>
+            <a href="create.html" class="hover:text-[#8c7862] transition flex items-center gap-2"><i class="fas fa-wand-magic-sparkles"></i> Create</a>
+            <a href="calendar.html" class="hover:text-[#8c7862] transition flex items-center gap-2"><i class="fas fa-calendar-alt"></i> Calendar</a>
+            <a href="lookbook.html" class="hover:text-[#8c7862] transition flex items-center gap-2"><i class="fas fa-images"></i> Lookbook</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto mt-6 md:mt-10 px-4 md:px-6">
+        <div class="hero-bg rounded-[1.5rem] md:rounded-[2.5rem] min-h-[350px] md:h-[520px] relative overflow-hidden flex items-center px-6 md:px-20 shadow-xl">
+            <div class="max-w-2xl text-white py-10">
+                <h1 class="text-4xl md:text-7xl font-bold mb-4 md:mb-6 drop-shadow-lg leading-tight">Your Digital Wardrobe</h1>
+                <p class="text-lg md:text-2xl opacity-95 mb-8 md:mb-10 font-light leading-relaxed">Organize your style, create stunning outfits, and plan your perfect look.</p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="wardrobe.html" class="gradient-btn text-white px-8 md:px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 shadow-2xl">
+                        <i class="fas fa-play text-sm"></i> Get Started
+                    </a>
+                    <a href="create.html" class="border-2 border-white/70 hover:border-white text-white px-8 md:px-10 py-4 rounded-2xl font-bold flex items-center justify-center gap-3 backdrop-blur-sm transition-all hover:bg-white/10 text-center">
+                        <i class="fas fa-wand-magic-sparkles"></i> Create Outfit
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8 md:mt-10">
+            <div class="bg-[#8c7862] text-white py-6 md:py-8 rounded-3xl shadow-lg text-center">
+                <div id="stat-total" class="text-3xl md:text-4xl font-bold mb-1">0</div>
+                <div class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Total Items</div>
+            </div>
+            <div class="bg-[#b3a08d] text-white py-6 md:py-8 rounded-3xl shadow-lg text-center">
+                <div id="stat-clean" class="text-3xl md:text-4xl font-bold mb-1">0</div>
+                <div class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Clean Items</div>
+            </div>
+            <div class="bg-[#cec2b3] text-[#4a4238] py-6 md:py-8 rounded-3xl shadow-lg text-center">
+                <div id="stat-laundry" class="text-3xl md:text-4xl font-bold mb-1">0</div>
+                <div class="text-[10px] opacity-80 uppercase tracking-widest font-bold">In Laundry</div>
+            </div>
+            <div class="bg-[#6b5d4d] text-white py-6 md:py-8 rounded-3xl shadow-lg text-center">
+                <div id="stat-saved" class="text-3xl md:text-4xl font-bold mb-1">0</div>
+                <div class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Saved Outfits</div>
+            </div>
+            <div class="bg-[#4a4238] text-white py-6 md:py-8 rounded-3xl shadow-lg text-center">
+                <div id="stat-scheduled" class="text-3xl md:text-4xl font-bold mb-1">0</div>
+                <div class="text-[10px] opacity-80 uppercase tracking-widest font-bold">Scheduled</div>
+            </div>
+        </div>
+
+        <section class="mt-16 md:mt-20">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8 border-l-4 border-[#8c7862] pl-4">Quick Actions</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <div onclick="location.href='wardrobe.html'" class="bg-white p-8 rounded-3xl border border-[#e6e0d5] cursor-pointer shadow-sm hover:shadow-md transition-all group">
+                    <div class="bg-[#f2ede4] w-12 h-12 rounded-2xl flex items-center justify-center text-[#8c7862] mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Add Clothing</h3>
+                    <p class="text-gray-400 text-sm">Upload new items and manage your digital closet.</p>
+                </div>
+
+                <div onclick="location.href='create.html'" class="bg-white p-8 rounded-3xl border border-[#e6e0d5] cursor-pointer shadow-sm hover:shadow-md transition-all group">
+                    <div class="bg-[#f2ede4] w-12 h-12 rounded-2xl flex items-center justify-center text-[#8c7862] mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Create Outfit</h3>
+                    <p class="text-gray-400 text-sm">Mix and match to find your next favorite combination.</p>
+                </div>
+
+                <div onclick="location.href='calendar.html'" class="bg-white p-8 rounded-3xl border border-[#e6e0d5] cursor-pointer shadow-sm hover:shadow-md transition-all group">
+                    <div class="bg-[#f2ede4] w-12 h-12 rounded-2xl flex items-center justify-center text-[#8c7862] mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Plan Week</h3>
+                    <p class="text-gray-400 text-sm">Schedule your looks and stay prepared for every event.</p>
+                </div>
+
+                <div onclick="location.href='lookbook.html'" class="bg-white p-8 rounded-3xl border border-[#e6e0d5] cursor-pointer shadow-sm hover:shadow-md transition-all group">
+                    <div class="bg-[#f2ede4] w-12 h-12 rounded-2xl flex items-center justify-center text-[#8c7862] mb-6 group-hover:scale-110 transition">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h3 class="font-bold text-gray-800 mb-2">Lookbook</h3>
+                    <p class="text-gray-400 text-sm">Browse your collection of saved masterpieces.</p>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/index.js"></script>
+</body>
+</html>

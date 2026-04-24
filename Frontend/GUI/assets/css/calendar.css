@@ -1,0 +1,33 @@
+/* calendar.css */
+.mini-calendar {
+    background: white; border-radius: 2.5rem; padding: 1.5rem;
+    border: 1px solid var(--card-border); width: 100%; max-width: 320px;
+}
+
+.cal-day {
+    aspect-ratio: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; border-radius: 1rem; font-size: 0.8rem;
+    font-weight: 600; cursor: pointer; transition: all 0.2s; position: relative;
+}
+.cal-day:hover { background: #f2ede4; }
+.cal-day.active { background: var(--earth-brown); color: white; }
+
+.cal-day.has-event::after {
+    content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px;
+    background: #8c7862; border-radius: 50%;
+}
+
+.flashcard-slot {
+    background: white; border-radius: 3rem; padding: 2.5rem;
+    border: 1px solid var(--card-border); display: flex;
+    flex-direction: column; align-items: center; text-align: center;
+    min-height: 450px;
+}
+
+.stack-circle {
+    width: 80px; height: 80px; border-radius: 50%; background: #f8f6f2;
+    border: 4px solid white; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; margin-left: -1.5rem;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.08); transition: transform 0.3s;
+}
+.stack-circle:first-child { margin-left: 0; }

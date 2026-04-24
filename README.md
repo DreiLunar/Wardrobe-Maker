@@ -1,5 +1,5 @@
-# Wardrobe Manager 👗
-*A C# console-based program for managing clothing inventory and outfits*
+# Wardrobe Maker 👗
+*A system for managing clothing inventory and outfits*
 
 ![Wardrobe Manager Banner](<img width="2000" height="2000" alt="666421362_1638199117302595_5378415429514602078_n" src="https://github.com/user-attachments/assets/02d504b1-e064-4587-a2d6-06c85d1f7d7b" />
 )

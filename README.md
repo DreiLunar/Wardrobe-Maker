@@ -63,7 +63,7 @@ WardrobeMaker/
 
 ## 🔀 Flowchart
 
-![flowchart](<img width="753" height="1037" alt="flowchart" src="https://github.com/user-attachments/assets/9a5ae6e5-4ab7-49b1-b2d4-a3e344f4221b" />)
+![flowchart](https://github.com/user-attachments/assets/9a5ae6e5-4ab7-49b1-b2d4-a3e344f4221b" />)
 
 
 ## 📋 Sample Code Structure

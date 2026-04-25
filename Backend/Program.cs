@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WardrobeMaker
 {
@@ -6,40 +7,33 @@ namespace WardrobeMaker
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Wardrobe Maker ===\n");
+            Console.WriteLine("=== Wardrobe Maker Test: Assembling an Outfit ===\n");
 
-            WardrobeManager manager = new WardrobeManager();
-            Console.WriteLine($"[System] Closet loaded with {manager.Inventory.Count} items.\n");
+            // 1. Create individual clothing items
+            Top myShirt = new Top("TOP-001", "Vintage Denim Jacket", "Blue",
+                new List<string> { "casual", "layering" }, "Long");
+            Bottom myJeans = new Bottom("BOT-001", "Black Denim", "Black",
+                new List<string> { "casual", "versatile" }, "Slim");
+            Footwear myBoots = new Footwear("FW-001", "Leather Chelsea Boots", "Brown",
+                new List<string> { "smart-casual", "boots" }, "Boots");
 
-            Console.WriteLine("--- Available 'casual' Items ---");
-            foreach (var item in manager.GetAvailableItems("casual"))
-            {
-                Console.WriteLine(item.GetDetails());
-            }
+            // 2. Combine them into an Outfit
+            Outfit fridayNightLook = new Outfit("OFT-001", "Friday Night Casual", myShirt, myJeans, myBoots);
 
-            Console.WriteLine("\n--- Generating Random Outfit ---");
-            Outfit generated = manager.GenerateOutfit("");
-            if (generated != null)
-            {
-                generated.OutfitName = "My First Look";
-                generated.ScheduledDate = DateTime.Today;
+            // 3. Display the Outfit
+            Console.WriteLine($"[Outfit Loaded: {fridayNightLook.OutfitName}]");
+            Console.WriteLine($"- {fridayNightLook.SelectedTop.GetDetails()}");
+            Console.WriteLine($"- {fridayNightLook.SelectedBottom.GetDetails()}");
+            Console.WriteLine($"- {fridayNightLook.SelectedShoes.GetDetails()}");
 
-                Console.WriteLine($"Outfit: {generated.OutfitName} (ID: {generated.OutfitID})");
-                Console.WriteLine($"  {generated.SelectedTop.GetDetails()}");
-                Console.WriteLine($"  {generated.SelectedBottom.GetDetails()}");
-                Console.WriteLine($"  {generated.SelectedShoes.GetDetails()}");
-                Console.WriteLine($"  Scheduled: {generated.ScheduledDate?.ToShortDateString()}");
-                Console.WriteLine($"  Ready to wear: {generated.VerifyAvailability()}");
+            // 4. Test the Verification Logic
+            Console.WriteLine($"\nIs this outfit ready to wear? {fridayNightLook.VerifyAvailability()}");
 
-                manager.Lookbook.Add(generated);
-                Console.WriteLine($"\n[Lookbook] {manager.Lookbook.Count} outfit(s) saved.");
-            }
+            // 5. Throw the shirt in the laundry and check again!
+            Console.WriteLine("\n--> Action: Sending the jacket to the laundry...");
+            myShirt.ToggleLaundryStatus();
 
-            Console.WriteLine("\n--- Laundry Status Test ---");
-            manager.Inventory[0].ToggleLaundryStatus();
-            Console.WriteLine(manager.Inventory[0].GetDetails());
-
-            manager.SaveData();
+            Console.WriteLine($"\nIs this outfit ready to wear now? {fridayNightLook.VerifyAvailability()}");
         }
     }
 }

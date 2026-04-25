@@ -7,33 +7,21 @@ namespace WardrobeMaker
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Wardrobe Maker Test: Assembling an Outfit ===\n");
+            Console.WriteLine("=== Wardrobe Maker Test: Saving & Loading ===\n");
 
-            // 1. Create individual clothing items
-            Top myShirt = new Top("TOP-001", "Vintage Denim Jacket", "Blue",
-                new List<string> { "casual", "layering" }, "Long");
-            Bottom myJeans = new Bottom("BOT-001", "Black Denim", "Black",
-                new List<string> { "casual", "versatile" }, "Slim");
-            Footwear myBoots = new Footwear("FW-001", "Leather Chelsea Boots", "Brown",
-                new List<string> { "smart-casual", "boots" }, "Boots");
+            // 1. Boot up the system (Loads dummies the first time, JSON the second time)
+            WardrobeManager appManager = new WardrobeManager();
 
-            // 2. Combine them into an Outfit
-            Outfit fridayNightLook = new Outfit("OFT-001", "Friday Night Casual", myShirt, myJeans, myBoots);
+            // 2. Add a brand new item to the inventory so we can prove it saves
+            appManager.Inventory.Add(new Top("TOP-999", "Brand New Red Hoodie", "Red", new List<string> { "cozy", "winter" }, "Long"));
+            Console.WriteLine($"\n[Action] Added 'Brand New Red Hoodie' to the closet.");
+            Console.WriteLine($"Total items in closet: {appManager.Inventory.Count}");
 
-            // 3. Display the Outfit
-            Console.WriteLine($"[Outfit Loaded: {fridayNightLook.OutfitName}]");
-            Console.WriteLine($"- {fridayNightLook.SelectedTop.GetDetails()}");
-            Console.WriteLine($"- {fridayNightLook.SelectedBottom.GetDetails()}");
-            Console.WriteLine($"- {fridayNightLook.SelectedShoes.GetDetails()}");
-
-            // 4. Test the Verification Logic
-            Console.WriteLine($"\nIs this outfit ready to wear? {fridayNightLook.VerifyAvailability()}");
-
-            // 5. Throw the shirt in the laundry and check again!
-            Console.WriteLine("\n--> Action: Sending the jacket to the laundry...");
-            myShirt.ToggleLaundryStatus();
-
-            Console.WriteLine($"\nIs this outfit ready to wear now? {fridayNightLook.VerifyAvailability()}");
+            // 3. Save everything to the hard drive
+            Console.WriteLine("\n--> Action: Saving all data to JSON...");
+            appManager.SaveData();
+            
+            Console.WriteLine("\nTest complete! Check the left panel in Rider for your new JSON files.");
         }
     }
 }

@@ -1,0 +1,102 @@
+[
+  {
+    "$type": "Top",
+    "SleeveType": "Long",
+    "ItemID": "TOP-001",
+    "Name": "Vintage Denim Jacket",
+    "ImageFilePath": "",
+    "PrimaryColor": "Blue",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Short",
+    "ItemID": "TOP-002",
+    "Name": "Graphic Band Tee",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual",
+      "edgy"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Bottom",
+    "FitType": "Slim",
+    "ItemID": "BOT-001",
+    "Name": "Black Denim",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual",
+      "versatile"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Bottom",
+    "FitType": "Straight",
+    "ItemID": "BOT-002",
+    "Name": "Khaki Chinos",
+    "ImageFilePath": "",
+    "PrimaryColor": "Tan",
+    "Tags": [
+      "smart-casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Footwear",
+    "StyleCategory": "Boots",
+    "ItemID": "FW-001",
+    "Name": "Leather Chelsea Boots",
+    "ImageFilePath": "",
+    "PrimaryColor": "Brown",
+    "Tags": [
+      "smart-casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Footwear",
+    "StyleCategory": "Sneakers",
+    "ItemID": "FW-002",
+    "Name": "White Canvas Sneakers",
+    "ImageFilePath": "",
+    "PrimaryColor": "White",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Long",
+    "ItemID": "TOP-999",
+    "Name": "Brand New Red Hoodie",
+    "ImageFilePath": "",
+    "PrimaryColor": "Red",
+    "Tags": [
+      "cozy",
+      "winter"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Long",
+    "ItemID": "TOP-999",
+    "Name": "Brand New Red Hoodie",
+    "ImageFilePath": "",
+    "PrimaryColor": "Red",
+    "Tags": [
+      "cozy",
+      "winter"
+    ],
+    "IsClean": true
+  }
+]

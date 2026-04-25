@@ -2,56 +2,71 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Linq;
 
 namespace WardrobeMaker
 {
     public class WardrobeManager
     {
         public List<ClothingItem> Inventory { get; set; }
+        
+        // This is your "Lookbook" - where outfits go when you hit Save in create.html
+        public List<Outfit> SavedOutfits { get; set; } 
+        
+        // This is for the Calendar page specifically
         public Dictionary<DateTime, List<Outfit>> ScheduledOutfits { get; set; }
 
-        //File names for save data
         private const string InventoryFile = "inventory.json";
+        private const string OutfitsFile = "outfits.json"; // New file for your lookbook
         private const string CalendarFile = "calendar.json";
 
         public WardrobeManager()
         {
             Inventory = new List<ClothingItem>();
+            SavedOutfits = new List<Outfit>();
             ScheduledOutfits = new Dictionary<DateTime, List<Outfit>>();
 
-            LoadData();//Automatically tries to load save files first
+            LoadData();
+        }
+        
+        // This is the method Program.cs is looking for!
+        public void AddOutfit(Outfit outfit)
+        {
+            SavedOutfits.Add(outfit);
+            SaveData();
         }
         
         public void SaveData()
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
             
-            //Save Inventory
-            string inventoryJson = JsonSerializer.Serialize(Inventory, options);
-            File.WriteAllText(InventoryFile, inventoryJson);
-
-            //Save Calendar
-            string calendarJson = JsonSerializer.Serialize(ScheduledOutfits, options);
-            File.WriteAllText(CalendarFile, calendarJson);
+            File.WriteAllText(InventoryFile, JsonSerializer.Serialize(Inventory, options));
+            File.WriteAllText(OutfitsFile, JsonSerializer.Serialize(SavedOutfits, options));
+            File.WriteAllText(CalendarFile, JsonSerializer.Serialize(ScheduledOutfits, options));
             
             Console.WriteLine("[System] Data successfully saved to JSON files.");
         }
 
         private void LoadData()
         {
-            if (File.Exists(InventoryFile) && File.Exists(CalendarFile))
+            try 
             {
-                string inventoryJson = File.ReadAllText(InventoryFile);
-                Inventory = JsonSerializer.Deserialize<List<ClothingItem>>(inventoryJson);
+                if (File.Exists(InventoryFile))
+                    Inventory = JsonSerializer.Deserialize<List<ClothingItem>>(File.ReadAllText(InventoryFile)) ?? new List<ClothingItem>();
 
-                string calendarJson = File.ReadAllText(CalendarFile);
-                ScheduledOutfits = JsonSerializer.Deserialize<Dictionary<DateTime, List<Outfit>>>(calendarJson);
+                if (File.Exists(OutfitsFile))
+                    SavedOutfits = JsonSerializer.Deserialize<List<Outfit>>(File.ReadAllText(OutfitsFile)) ?? new List<Outfit>();
+
+                if (File.Exists(CalendarFile))
+                    ScheduledOutfits = JsonSerializer.Deserialize<Dictionary<DateTime, List<Outfit>>>(File.ReadAllText(CalendarFile)) ?? new Dictionary<DateTime, List<Outfit>>();
+
+                if (Inventory.Count == 0) LoadDummyData();
                 
-                Console.WriteLine("[System] Loaded existing save data from hard drive.");
+                Console.WriteLine("[System] Loaded existing save data.");
             }
-            else
+            catch 
             {
-                Console.WriteLine("[System] No save files found. Loading dummy data...");
+                Console.WriteLine("[System] Error loading files. Loading defaults...");
                 LoadDummyData();
             }
         }
@@ -59,13 +74,9 @@ namespace WardrobeMaker
         private void LoadDummyData()
         {
             Inventory.Add(new Top("TOP-001", "Vintage Denim Jacket", "Blue", new List<string> { "casual" }, "Long"));
-            Inventory.Add(new Top("TOP-002", "Graphic Band Tee", "Black", new List<string> { "casual", "edgy" }, "Short"));
-            
-            Inventory.Add(new Bottom("BOT-001", "Black Denim", "Black", new List<string> { "casual", "versatile" }, "Slim"));
-            Inventory.Add(new Bottom("BOT-002", "Khaki Chinos", "Tan", new List<string> { "smart-casual" }, "Straight"));
-            
-            Inventory.Add(new Footwear("FW-001", "Leather Chelsea Boots", "Brown", new List<string> { "smart-casual" }, "Boots"));
-            Inventory.Add(new Footwear("FW-002", "White Canvas Sneakers", "White", new List<string> { "casual" }, "Sneakers"));
+            Inventory.Add(new Top("TOP-002", "Graphic Band Tee", "Black", new List<string> { "casual" }, "Short"));
+            Inventory.Add(new Bottom("BOT-001", "Black Denim", "Black", new List<string> { "casual" }, "Slim"));
+            Inventory.Add(new Footwear("FW-001", "White Sneakers", "White", new List<string> { "casual" }, "Sneakers"));
         }
         
         public void ScheduleOutfit(DateTime date, Outfit newOutfit)

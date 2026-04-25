@@ -1,25 +1,36 @@
-/* wardrobe.js */
 const WardrobeApp = {
     selectedCategory: 'Top',
-    items: JSON.parse(localStorage.getItem('myWardrobe')) || [],
+    items: [],
 
-    init() {
+    async init() {
+        await this.loadFromDatabase();
         this.render();
-        // Listener for the filter dropdown
+
         const filterEl = document.getElementById('catFilter');
         if (filterEl) {
             filterEl.addEventListener('change', (e) => this.render(e.target.value));
         }
     },
 
-    openModal() { 
-        const modal = document.getElementById('addItemModal');
-        if (modal) modal.style.display = 'flex'; 
+    async loadFromDatabase() {
+        try {
+            console.log("Asking C# server for clothes...");
+            const response = await fetch('http://localhost:5000/api/inventory');
+            this.items = await response.json();
+            console.log("Received data from C#:", this.items);
+        } catch (error) {
+            console.error("Could not connect to C# server:", error);
+        }
     },
 
-    closeModal() { 
+    openModal() {
         const modal = document.getElementById('addItemModal');
-        if (modal) modal.style.display = 'none'; 
+        if (modal) modal.style.display = 'flex';
+    },
+
+    closeModal() {
+        const modal = document.getElementById('addItemModal');
+        if (modal) modal.style.display = 'none';
     },
 
     selectCat(el, cat) {
@@ -41,42 +52,22 @@ const WardrobeApp = {
     },
 
     saveItem() {
-        const nameInput = document.getElementById('itemName');
-        const imgPreview = document.getElementById('imagePreview');
-        
-        if (!nameInput.value || imgPreview.src.includes('#')) {
-            return alert("Please add a name and image");
-        }
-
-        const newItem = {
-            id: Date.now(),
-            name: nameInput.value,
-            category: this.selectedCategory,
-            image: imgPreview.src,
-            status: 'clean' // Added for Dashboard compatibility
-        };
-
-        this.items.push(newItem);
-        localStorage.setItem('myWardrobe', JSON.stringify(this.items));
-        
-        // Reset form and UI
-        nameInput.value = '';
-        imgPreview.src = '#';
+        alert("We will connect the 'Save' button to the C# backend next!");
         this.closeModal();
-        this.render();
     },
 
     render(filter = 'All') {
         const grid = document.getElementById('wardrobeGrid');
-        const filtered = filter === 'All' ? this.items : this.items.filter(i => i.category === filter);
-        
-        // Update the count display from the screenshot
+
+        // Filter items based on the C# $type discriminator
+        const filtered = filter === 'All' ? this.items : this.items.filter(i => i.$type === filter);
+
         const countEl = document.getElementById('itemCount');
         if (countEl) countEl.innerText = filtered.length;
 
-        // Logic for Empty State vs. Items Grid
         if (filtered.length === 0) {
-            grid.classList.add('empty-container'); // Triggers the dashed border in CSS
+            grid.classList.add('empty-container');
+            grid.className = "min-h-[400px] bg-white rounded-[3rem] border-2 border-dashed border-[#e6e0d5] flex flex-col items-center justify-center p-12 text-center";
             grid.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-20">
                     <div class="text-[#e6e0d5] text-8xl mb-6">
@@ -87,16 +78,23 @@ const WardrobeApp = {
                 </div>
             `;
         } else {
-            grid.classList.remove('empty-container'); // Remove dashed border
-            grid.innerHTML = filtered.map(item => `
-                <div class="bg-white p-4 rounded-[2rem] shadow-sm border border-[#e6e0d5] hover:shadow-md transition">
-                    <img src="${item.image}" class="w-full h-56 object-cover rounded-[1.5rem] mb-4">
-                    <div class="px-2 pb-2">
-                        <h4 class="font-bold text-gray-800">${item.name}</h4>
-                        <p class="text-[10px] text-[#8c7862] font-bold uppercase tracking-widest">${item.category}</p>
+            grid.classList.remove('empty-container');
+            // FIX: Re-applying the grid layout classes
+            grid.className = "wardrobe-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full";
+
+            grid.innerHTML = filtered.map(item => {
+                const imgSrc = item.imageFilePath ? item.imageFilePath : 'https://placehold.co/300x400/e6e0d5/8c7862?text=No+Image';
+
+                return `
+                <div class="bg-white p-4 rounded-[2rem] shadow-sm border border-[#e6e0d5] hover:shadow-md transition flex flex-col h-full">
+                    <img src="${imgSrc}" class="w-full h-64 object-cover rounded-[1.5rem] mb-4">
+                    <div class="px-2 pb-2 mt-auto">
+                        <h4 class="font-bold text-gray-800 text-lg">${item.name}</h4>
+                        <p class="text-[10px] text-[#8c7862] font-bold uppercase tracking-widest">${item.$type}</p>
                     </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
     }
 };

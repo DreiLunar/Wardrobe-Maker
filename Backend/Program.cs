@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http; 
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace WardrobeMaker
 {
@@ -7,21 +10,56 @@ namespace WardrobeMaker
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Wardrobe Maker Test: Saving & Loading ===\n");
+            Console.WriteLine("=== Wardrobe Maker Server: ONLINE ===\n");
 
-            // 1. Boot up the system (Loads dummies the first time, JSON the second time)
-            WardrobeManager appManager = new WardrobeManager();
+            var builder = WebApplication.CreateBuilder(args);
 
-            // 2. Add a brand new item to the inventory so we can prove it saves
-            appManager.Inventory.Add(new Top("TOP-999", "Brand New Red Hoodie", "Red", new List<string> { "cozy", "winter" }, "Long"));
-            Console.WriteLine($"\n[Action] Added 'Brand New Red Hoodie' to the closet.");
-            Console.WriteLine($"Total items in closet: {appManager.Inventory.Count}");
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy => 
+                    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            });
 
-            // 3. Save everything to the hard drive
-            Console.WriteLine("\n--> Action: Saving all data to JSON...");
-            appManager.SaveData();
+            builder.Services.AddSingleton<WardrobeManager>();
+
+            var app = builder.Build();
+            app.UseCors("AllowAll");
             
-            Console.WriteLine("\nTest complete! Check the left panel in Rider for your new JSON files.");
+            app.MapGet("/", () => "The Wardrobe Maker Brain is running!");
+
+            app.MapGet("/api/inventory", (WardrobeManager manager) => 
+            {
+                return Results.Ok(manager.Inventory);
+            });
+
+            app.MapGet("/api/outfits", (WardrobeManager manager) => 
+            {
+                Console.WriteLine("[API] Sending Saved Outfits to Lookbook...");
+                return Results.Ok(manager.SavedOutfits);
+            });
+
+            app.MapPost("/api/outfits", (WardrobeManager manager, OutfitRequest req) => 
+            {
+                var top = manager.Inventory.OfType<Top>().FirstOrDefault(i => i.ItemID == req.topId);
+                var bottom = manager.Inventory.OfType<Bottom>().FirstOrDefault(i => i.ItemID == req.bottomId);
+                var shoes = manager.Inventory.OfType<Footwear>().FirstOrDefault(i => i.ItemID == req.shoesId);
+
+                if (top == null || bottom == null || shoes == null) {
+                    return Results.BadRequest("Could not find selected items in inventory.");
+                }
+
+                string newId = "OFT-" + Guid.NewGuid().ToString().Substring(0, 4).ToUpper();
+                var newOutfit = new Outfit(newId, req.outfitName, top, bottom, shoes);
+
+                manager.AddOutfit(newOutfit);
+    
+                Console.WriteLine($"[API] Outfit '{newOutfit.OutfitName}' saved to JSON.");
+                return Results.Ok(new { message = "Success" });
+            });
+
+            app.Run();
         }
     }
+
+    public record OutfitRequest(string outfitName, string topId, string bottomId, string shoesId);
 }

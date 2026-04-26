@@ -98,5 +98,101 @@
       "winter"
     ],
     "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Long",
+    "ItemID": "TOP-001",
+    "Name": "Vintage Denim Jacket",
+    "ImageFilePath": "",
+    "PrimaryColor": "Blue",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Short",
+    "ItemID": "TOP-002",
+    "Name": "Graphic Band Tee",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Bottom",
+    "FitType": "Slim",
+    "ItemID": "BOT-001",
+    "Name": "Black Denim",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Footwear",
+    "StyleCategory": "Sneakers",
+    "ItemID": "FW-001",
+    "Name": "White Sneakers",
+    "ImageFilePath": "",
+    "PrimaryColor": "White",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Long",
+    "ItemID": "TOP-001",
+    "Name": "Vintage Denim Jacket",
+    "ImageFilePath": "",
+    "PrimaryColor": "Blue",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Top",
+    "SleeveType": "Short",
+    "ItemID": "TOP-002",
+    "Name": "Graphic Band Tee",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Bottom",
+    "FitType": "Slim",
+    "ItemID": "BOT-001",
+    "Name": "Black Denim",
+    "ImageFilePath": "",
+    "PrimaryColor": "Black",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
+  },
+  {
+    "$type": "Footwear",
+    "StyleCategory": "Sneakers",
+    "ItemID": "FW-001",
+    "Name": "White Sneakers",
+    "ImageFilePath": "",
+    "PrimaryColor": "White",
+    "Tags": [
+      "casual"
+    ],
+    "IsClean": true
   }
 ]

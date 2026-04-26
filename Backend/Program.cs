@@ -56,6 +56,25 @@ namespace WardrobeMaker
                 Console.WriteLine($"[API] Outfit '{newOutfit.OutfitName}' saved to JSON.");
                 return Results.Ok(new { message = "Success" });
             });
+          
+            app.MapDelete("/api/outfits/{id}", (WardrobeManager manager, string id) => 
+            {
+                bool isDeleted = manager.DeleteOutfit(id);
+                
+                if (isDeleted) {
+                    Console.WriteLine($"[API] Successfully deleted outfit: {id}");
+                    return Results.Ok(new { message = "Outfit deleted!" });
+                }
+                
+                return Results.NotFound(new { message = "Outfit not found." });
+            });
+
+			app.MapDelete("/api/outfits", (WardrobeManager manager) => 
+            {
+                manager.ClearAllOutfits();
+                Console.WriteLine("[API] Successfully cleared all saved outfits!");
+                return Results.Ok(new { message = "All outfits cleared!" });
+            });
 
             app.Run();
         }

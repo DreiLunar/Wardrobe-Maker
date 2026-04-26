@@ -10,14 +10,14 @@ namespace WardrobeMaker
     {
         public List<ClothingItem> Inventory { get; set; }
         
-        // This is your "Lookbook" - where outfits go when you hit Save in create.html
+        // Your "Lookbook" list
         public List<Outfit> SavedOutfits { get; set; } 
         
-        // This is for the Calendar page specifically
+        // Your Calendar list
         public Dictionary<DateTime, List<Outfit>> ScheduledOutfits { get; set; }
 
         private const string InventoryFile = "inventory.json";
-        private const string OutfitsFile = "outfits.json"; // New file for your lookbook
+        private const string OutfitsFile = "outfits.json"; 
         private const string CalendarFile = "calendar.json";
 
         public WardrobeManager()
@@ -29,13 +29,35 @@ namespace WardrobeMaker
             LoadData();
         }
         
-        // This is the method Program.cs is looking for!
+        // --- YOUR OUTFT MANAGEMENT METHODS --- //
+
         public void AddOutfit(Outfit outfit)
         {
             SavedOutfits.Add(outfit);
             SaveData();
         }
-        
+
+        public bool DeleteOutfit(string outfitId)
+        {
+            var outfitToRemove = SavedOutfits.FirstOrDefault(o => o.OutfitID == outfitId);
+            
+            if (outfitToRemove != null)
+            {
+                SavedOutfits.Remove(outfitToRemove);
+                SaveData(); 
+                return true;
+            }
+            return false; 
+        }
+
+        public void ClearAllOutfits()
+        {
+            SavedOutfits.Clear();
+            SaveData();
+        }
+
+        // --- SAVING AND LOADING TO JSON --- //
+
         public void SaveData()
         {
             var options = new JsonSerializerOptions { WriteIndented = true };
@@ -78,7 +100,9 @@ namespace WardrobeMaker
             Inventory.Add(new Bottom("BOT-001", "Black Denim", "Black", new List<string> { "casual" }, "Slim"));
             Inventory.Add(new Footwear("FW-001", "White Sneakers", "White", new List<string> { "casual" }, "Sneakers"));
         }
-        
+
+        // --- CALENDAR & GENERATION METHODS --- //
+
         public void ScheduleOutfit(DateTime date, Outfit newOutfit)
         {
             if (!ScheduledOutfits.ContainsKey(date))
@@ -116,7 +140,6 @@ namespace WardrobeMaker
             Bottom randomBottom = cleanBottoms[rand.Next(cleanBottoms.Count)];
             Footwear randomShoes = cleanShoes[rand.Next(cleanShoes.Count)];
 
-            //Generate a random ID for the new outfit
             string randomOutfitID = "OFT-" + rand.Next(1000, 9999).ToString();
 
             return new Outfit(randomOutfitID, newOutfitName, randomTop, randomBottom, randomShoes);

@@ -41,7 +41,12 @@ function renderInventory() {
 function addToCanvas(category, imgSrc, itemId) {
     console.log(`Adding ${category} with ID: ${itemId}`);
     const slot = document.getElementById(`slot-${category}`);
-    slot.innerHTML = `<img src="${imgSrc}" class="w-full h-full object-cover rounded-2xl"><div class="remove-btn" onclick="event.stopPropagation(); removeImage('${category}')">×</div>`;
+
+    slot.innerHTML = `
+        <img src="${imgSrc}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 1rem;">
+        <div class="remove-btn" onclick="event.stopPropagation(); removeImage('${category}')">×</div>
+    `;
+
     slot.classList.add('active');
     selectedIds[category] = itemId;
 }
@@ -93,4 +98,27 @@ async function saveOutfit() {
 function closeFlashcard() {
     document.getElementById('flashcardOverlay').style.display = 'none';
     location.reload();
+}
+
+function randomizeOutfit() {
+    const tops = myItems.filter(i => i.$type === 'Top');
+    const bottoms = myItems.filter(i => i.$type === 'Bottom');
+    const shoes = myItems.filter(i => i.$type === 'Footwear');
+
+    if (tops.length === 0 || bottoms.length === 0 || shoes.length === 0) {
+        alert("Not enough items! You need at least one Top, Bottom, and Footwear in your inventory.");
+        return;
+    }
+
+    const randomTop = tops[Math.floor(Math.random() * tops.length)];
+    const randomBottom = bottoms[Math.floor(Math.random() * bottoms.length)];
+    const randomShoes = shoes[Math.floor(Math.random() * shoes.length)];
+
+    const getImg = (item) => item.imageFilePath || 'https://placehold.co/300x400/e6e0d5/8c7862?text=No+Image';
+
+    addToCanvas('top', getImg(randomTop), randomTop.itemID);
+    addToCanvas('bottom', getImg(randomBottom), randomBottom.itemID);
+    addToCanvas('footwear', getImg(randomShoes), randomShoes.itemID);
+
+    console.log("Quick Roll complete!");
 }

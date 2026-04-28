@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wardrobe Maker | Calendar</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/calendar.css">
+</head>
+<body class="pb-20 pt-24">
+
+    <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#e6e0d5]">
+        <div class="flex items-center gap-3 mb-3 md:mb-0">
+            <div class="text-[#8c7862] text-2xl"><i class="fas fa-tshirt"></i></div>
+            <span class="font-bold text-xl text-gray-800">Wardrobe Maker</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2 md:gap-3 text-gray-500">
+            <a href="index.html" class="nav-item"><i class="fas fa-home"></i> Home</a>
+            <a href="wardrobe.html" class="nav-item"><i class="fas fa-vest"></i> Wardrobe</a>
+            <a href="create.html" class="nav-item"><i class="fas fa-wand-magic-sparkles"></i> Create</a>
+            <a href="calendar.html" class="nav-item active-link">
+                <i class="fas fa-calendar-alt"></i> Calendar
+            </a>
+            <a href="lookbook.html" class="nav-item"><i class="fas fa-images"></i> Lookbook</a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto mt-12 px-6 flex flex-col lg:flex-row gap-12 items-start">
+        <div class="w-full lg:w-auto flex flex-col items-center gap-6">
+            <div class="mini-calendar">
+                <div class="flex justify-between items-center mb-6 px-1">
+                    <h2 id="currentMonthYear" class="font-bold text-base text-gray-800"></h2>
+                    <div class="flex gap-4 text-gray-300">
+                        <i class="fas fa-chevron-left cursor-pointer hover:text-[#8c7862]"></i>
+                        <i class="fas fa-chevron-right cursor-pointer hover:text-[#8c7862]"></i>
+                    </div>
+                </div>
+                <div class="grid grid-cols-7 gap-2 text-center" id="calendarGrid">
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">S</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">M</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">T</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">W</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">T</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">F</span>
+                    <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">S</span>
+                </div>
+            </div>
+            
+            <button onclick="openScheduleModal()" class="w-full bg-white border border-[#e6e0d5] text-[#8c7862] py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-[#fcfaf7] transition shadow-sm">
+                <i class="fas fa-plus mr-2"></i> Schedule New Look
+            </button>
+        </div>
+
+        <div class="flex-grow w-full">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="flashcardContainer">
+                <div class="flashcard-slot" id="slot-today">
+                    <div id="todayChip" class="date-chip">Today</div>
+                    <div class="stack-placeholder" id="todayStack"></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2" id="todayTitle">No Outfit Scheduled</h3>
+                    <p class="text-gray-400 text-sm mb-8 px-6" id="todayDesc">Plan your look for today.</p>
+                </div>
+
+                <div class="flashcard-slot opacity-80" id="slot-tomorrow">
+                    <div id="tomorrowChip" class="date-chip">Tomorrow</div>
+                    <div class="stack-placeholder" id="tomorrowStack"></div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2" id="tomorrowTitle">Planning Ahead?</h3>
+                    <p class="text-gray-400 text-sm mb-8 px-6">Stay ahead of your week.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="scheduleModal">
+        <div class="bg-white p-8 rounded-[2.5rem] w-full max-w-md mx-4 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2">Schedule Look</h2>
+            <p class="text-gray-400 text-sm mb-6">Select an outfit from your Lookbook.</p>
+            <div class="space-y-4">
+                <select id="outfitSelect" class="w-full p-3 border rounded-xl bg-gray-50 outline-none"></select>
+                <input type="date" id="datePicker" class="w-full p-3 border rounded-xl bg-gray-50 outline-none">
+            </div>
+            <div class="flex gap-3 mt-8">
+                <button onclick="closeScheduleModal()" class="flex-1 py-3 text-gray-500 font-bold">Cancel</button>
+                <button onclick="confirmSchedule()" class="flex-1 py-3 bg-[#8c7862] text-white rounded-xl font-bold shadow-lg">Save Date</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/calendar.js"></script>
+</body>
+</html>
+

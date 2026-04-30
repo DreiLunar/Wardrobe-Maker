@@ -13,6 +13,7 @@ namespace WardrobeMaker
         public DateTime? ScheduledDate { get; set; }
 
         // Constructor for Standard outfit (Top + Bottom + Footwear)
+        // Polymorphism
         public Outfit(string outfitID, string outfitName, Top top, Bottom bottom, Footwear shoes)
         {
             OutfitID = outfitID;
@@ -25,6 +26,7 @@ namespace WardrobeMaker
         }
 
         // Constructor for Dress outfit (Dress + Footwear)
+        // Polymorphism
         public Outfit(string outfitID, string outfitName, Dress dress, Footwear shoes)
         {
             OutfitID = outfitID;

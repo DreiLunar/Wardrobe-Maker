@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace WardrobeMaker
 {
+    // Inheritance
     public class Bottom : ClothingItem
     {
         public string FitType { get; set; }
@@ -13,6 +14,7 @@ namespace WardrobeMaker
             FitType = fitType;
         }
 
+        // Polymorphism
         public override string GetDetails()
         {
             string status = IsClean ? "Clean" : "In the Laundry Basket";

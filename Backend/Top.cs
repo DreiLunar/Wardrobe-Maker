@@ -6,8 +6,8 @@ namespace WardrobeMaker
     {
         public string SleeveType { get; set; }
 
-        public Top(string itemID, string name, string primaryColor, List<string> tags, string sleeveType)
-            : base(itemID, name, primaryColor, tags)
+        public Top(string itemID, string name, string primaryColor, List<string> tags, string sleeveType, string imageFilePath = "")
+            : base(itemID, name, primaryColor, tags, imageFilePath)
         {
             SleeveType = sleeveType;
         }

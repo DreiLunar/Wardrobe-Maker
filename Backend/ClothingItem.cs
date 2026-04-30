@@ -11,13 +11,13 @@ namespace WardrobeMaker
         public List<string> Tags { get; set; }
         public bool IsClean { get; private set; }
 
-        public ClothingItem(string itemID, string name, string primaryColor, List<string> tags)
+        public ClothingItem(string itemID, string name, string primaryColor, List<string> tags, string imageFilePath = "")
         {
             ItemID = itemID;
             Name = name;
             PrimaryColor = primaryColor;
             Tags = tags;
-            ImageFilePath = "";
+            ImageFilePath = imageFilePath;
             IsClean = true;
         }
 

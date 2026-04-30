@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace WardrobeMaker
 {
+    // Abstraction
     public abstract class ClothingItem
     {
         public string ItemID { get; set; }
@@ -9,6 +10,7 @@ namespace WardrobeMaker
         public string ImageFilePath { get; set; }
         public string PrimaryColor { get; set; }
         public List<string> Tags { get; set; }
+        // Encapsulation
         public bool IsClean { get; private set; }
 
         public ClothingItem(string itemID, string name, string primaryColor, List<string> tags, string imageFilePath = "")

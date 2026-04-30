@@ -6,8 +6,8 @@ namespace WardrobeMaker
     {
         public string FitType { get; set; }
 
-        public Bottom(string itemID, string name, string primaryColor, List<string> tags, string fitType)
-            : base(itemID, name, primaryColor, tags)
+        public Bottom(string itemID, string name, string primaryColor, List<string> tags, string fitType, string imageFilePath = "")
+            : base(itemID, name, primaryColor, tags, imageFilePath)
         {
             FitType = fitType;
         }

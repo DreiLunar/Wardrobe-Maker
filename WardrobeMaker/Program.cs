@@ -14,7 +14,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Ensure uploads directory exists for user photo uploads
 var webRootPath = builder.Environment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 var uploadsPath = Path.Combine(webRootPath, "uploads");
 if (!Directory.Exists(uploadsPath))

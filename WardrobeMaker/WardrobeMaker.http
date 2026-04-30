@@ -1,6 +1,0 @@
-@WardrobeMaker_HostAddress = http://localhost:5222
-
-GET {{WardrobeMaker_HostAddress}}/api/wardrobe/inventory
-Accept: application/json
-
-###

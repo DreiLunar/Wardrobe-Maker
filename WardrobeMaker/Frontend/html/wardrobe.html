@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wardrobe Maker | My Wardrobe</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="stylesheet" href="../css/wardrobe.css" />
+</head>
+<body class="bg-[#f9f7f4] pb-20 pt-24">
+
+  <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#e6e0d5]">
+    <div class="flex items-center gap-3 mb-3 md:mb-0">
+        <div class="text-[#8c7862] text-2xl"><i class="fas fa-tshirt"></i></div>
+        <span class="font-bold text-xl text-gray-800">Wardrobe Maker</span>
+    </div>
+
+    <div class="flex flex-wrap justify-center gap-2 md:gap-3 text-gray-500">
+        <a href="index.html" class="nav-item">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="wardrobe.html" class="nav-item active-link">
+            <i class="fas fa-vest"></i> Wardrobe
+        </a>
+        <a href="create.html" class="nav-item"><i class="fas fa-wand-magic-sparkles"></i> Create</a>
+        <a href="calendar.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Calendar</a>
+        <a href="lookbook.html" class="nav-item"><i class="fas fa-images"></i> Lookbook</a>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto mt-8 px-4 md:px-6">
+    <header class="bg-[#b3a08d] rounded-[2.5rem] p-10 md:p-16 text-white flex flex-col md:flex-row justify-between items-center shadow-xl mb-10">
+      <div>
+        <h1 class="text-4xl md:text-6xl font-bold mb-2">My Wardrobe</h1>
+        <p class="text-lg opacity-90 font-light">Manage and organize your collection</p>
+      </div>
+      <button class="mt-6 md:mt-0 bg-white text-[#8c7862] px-8 py-4 rounded-2xl font-bold flex items-center gap-3 shadow-lg hover:scale-105 transition" onclick="WardrobeApp.openModal()">
+        <i class="fas fa-plus"></i> Add Clothing
+      </button>
+    </header>
+
+    <div class="bg-white border border-[#e6e0d5] rounded-3xl p-6 mb-10 flex flex-col sm:flex-row justify-between items-center gap-4 shadow-sm">
+      <div class="flex items-center gap-4">
+        <span class="text-[#8c7862] font-bold flex items-center gap-2"><i class="fas fa-filter"></i> Filters:</span>
+        <select id="catFilter" class="bg-gray-50 border border-[#e6e0d5] rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-[#8c7862] text-sm text-gray-600">
+          <option value="All">All Categories</option>
+          <option value="Top">Tops</option>
+          <option value="Bottom">Bottoms</option>
+          <option value="Dress">Dresses</option>
+          <option value="Footwear">Footwear</option>
+        </select>
+      </div>
+      <p class="text-gray-400 text-sm italic">Showing <span id="itemCount" class="font-bold text-gray-800">0</span> items</p>
+    </div>
+
+    <div id="wardrobeColumns" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="wardrobe-column">
+        <div class="column-header">
+          <i class="fas fa-shirt"></i>
+          <h3>Tops</h3>
+          <span id="topsCount" class="column-count">0</span>
+        </div>
+        <div id="topsGrid" class="column-grid"></div>
+      </div>
+      <div class="wardrobe-column">
+        <div class="column-header">
+          <i class="fas fa-venus-mars"></i>
+          <h3>Bottoms</h3>
+          <span id="bottomsCount" class="column-count">0</span>
+        </div>
+        <div id="bottomsGrid" class="column-grid"></div>
+      </div>
+      <div class="wardrobe-column">
+        <div class="column-header">
+          <i class="fas fa-vest-patches"></i>
+          <h3>Dresses</h3>
+          <span id="dressesCount" class="column-count">0</span>
+        </div>
+        <div id="dressesGrid" class="column-grid"></div>
+      </div>
+      <div class="wardrobe-column">
+        <div class="column-header">
+          <i class="fas fa-shoe-prints"></i>
+          <h3>Footwear</h3>
+          <span id="footwearCount" class="column-count">0</span>
+        </div>
+        <div id="footwearGrid" class="column-grid"></div>
+      </div>
+    </div>
+  </main>
+
+  <div id="addItemModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4" onclick="if(event.target === this) WardrobeApp.closeModal()">
+      <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+          <button onclick="WardrobeApp.closeModal()" class="absolute top-6 right-6 text-gray-300 hover:text-gray-600 transition">
+              <i class="fas fa-times text-xl"></i>
+          </button>
+          
+          <h2 class="text-2xl font-bold text-gray-800 mb-1">Add Clothing</h2>
+          <p class="text-gray-400 text-sm mb-6">Add a new item to your wardrobe</p>
+          
+          <div class="space-y-4">
+              <div>
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Item Name</label>
+                  <input type="text" id="itemName" placeholder="e.g. Vintage Denim Jacket" class="w-full bg-gray-50 border border-[#e6e0d5] rounded-xl px-4 py-3 outline-none focus:ring-1 focus:ring-[#8c7862] text-sm">
+              </div>
+              
+              <div>
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Primary Color</label>
+                  <input type="text" id="itemColor" placeholder="e.g. Blue" class="w-full bg-gray-50 border border-[#e6e0d5] rounded-xl px-4 py-3 outline-none focus:ring-1 focus:ring-[#8c7862] text-sm">
+              </div>
+              
+              <div>
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Category</label>
+                  <div class="flex gap-2">
+                      <button type="button" onclick="WardrobeApp.selectCat(this, 'Top')" class="cat-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Top</button>
+                      <button type="button" onclick="WardrobeApp.selectCat(this, 'Bottom')" class="cat-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Bottom</button>
+                      <button type="button" onclick="WardrobeApp.selectCat(this, 'Dress')" class="cat-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Dress</button>
+                      <button type="button" onclick="WardrobeApp.selectCat(this, 'Footwear')" class="cat-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Footwear</button>
+                  </div>
+              </div>
+              
+              <div id="dressLengthContainer" class="hidden">
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Dress Length</label>
+                  <div class="flex gap-2">
+                      <button type="button" onclick="WardrobeApp.selectDressLength(this, 'Mini')" class="dress-length-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Mini</button>
+                      <button type="button" onclick="WardrobeApp.selectDressLength(this, 'Knee')" class="dress-length-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Knee</button>
+                      <button type="button" onclick="WardrobeApp.selectDressLength(this, 'Midi')" class="dress-length-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Midi</button>
+                      <button type="button" onclick="WardrobeApp.selectDressLength(this, 'Maxi')" class="dress-length-choice flex-1 py-3 rounded-xl border border-[#e6e0d5] text-sm font-bold text-gray-500 hover:border-[#8c7862] hover:text-[#8c7862] transition">Maxi</button>
+                  </div>
+              </div>
+              
+              <div>
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Tags (comma separated)</label>
+                  <input type="text" id="itemTags" placeholder="e.g. casual, layering, vintage" class="w-full bg-gray-50 border border-[#e6e0d5] rounded-xl px-4 py-3 outline-none focus:ring-1 focus:ring-[#8c7862] text-sm">
+              </div>
+              
+              <div>
+                  <label class="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Photo</label>
+                  <div class="relative">
+                      <input type="file" id="itemPhoto" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="WardrobeApp.previewImage(this)">
+                      <div id="uploadPrompt" onclick="document.getElementById('itemPhoto').click()" class="border-2 border-dashed border-[#e6e0d5] rounded-2xl p-8 text-center cursor-pointer hover:border-[#8c7862] transition">
+                          <i class="fas fa-cloud-upload-alt text-[#e6e0d5] text-3xl mb-2"></i>
+                          <p class="text-gray-400 text-sm">Click to upload a photo</p>
+                          <p class="text-gray-300 text-xs mt-1">JPG, PNG, or WEBP</p>
+                      </div>
+                      <div id="previewContainer" class="hidden relative">
+                          <img id="imagePreview" src="#" class="w-full h-48 object-cover rounded-2xl">
+                          <button type="button" onclick="document.getElementById('itemPhoto').click()" class="absolute bottom-2 right-2 bg-white/90 text-[#8c7862] px-3 py-1 rounded-lg text-xs font-bold shadow-sm">Change</button>
+                      </div>
+                  </div>
+              </div>
+              
+              <div id="modalError" class="text-red-500 text-sm hidden"></div>
+              
+              <div class="flex gap-3 pt-2">
+                  <button type="button" onclick="WardrobeApp.closeModal()" class="flex-1 py-3 text-gray-500 font-bold rounded-xl hover:bg-gray-50 transition">Cancel</button>
+                  <button type="button" onclick="WardrobeApp.saveItem()" class="flex-1 py-3 bg-[#8c7862] text-white rounded-xl font-bold shadow-lg hover:bg-[#4a4238] transition">Save Item</button>
+              </div>
+          </div>
+      </div>
+  </div>
+
+  <script src="../js/wardrobe.js"></script>
+</body>
+</html>
+

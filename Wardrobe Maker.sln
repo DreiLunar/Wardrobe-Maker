@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WardrobeMaker", "WardrobeMaker", "{172A5244-7FB2-25C6-32C4-E3CC99C3E7F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{1FE63B8A-3442-EE02-B018-04A2BB82B09C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WardrobeMaker", "WardrobeMaker\Backend\WardrobeMaker.csproj", "{79B4D652-5C5F-0CB7-269A-23C536FE6EDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{79B4D652-5C5F-0CB7-269A-23C536FE6EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79B4D652-5C5F-0CB7-269A-23C536FE6EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79B4D652-5C5F-0CB7-269A-23C536FE6EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79B4D652-5C5F-0CB7-269A-23C536FE6EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1FE63B8A-3442-EE02-B018-04A2BB82B09C} = {172A5244-7FB2-25C6-32C4-E3CC99C3E7F5}
+		{79B4D652-5C5F-0CB7-269A-23C536FE6EDE} = {1FE63B8A-3442-EE02-B018-04A2BB82B09C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0791130-CA23-4CA7-BA46-676EF884D169}
+	EndGlobalSection
+EndGlobal

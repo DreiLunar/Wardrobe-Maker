@@ -142,13 +142,21 @@
     background: #f5f5f0;
     color: #8c7862;
     border: 2px solid #e6e0d5;
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 .mode-btn:hover {
     border-color: #8c7862;
     background: #fcfaf7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(140, 120, 98, 0.15);
+}
+.mode-btn:active {
+    transform: translateY(0);
 }
 .mode-btn.active {
     background: #8c7862;
     color: white;
     border-color: #8c7862;
+    box-shadow: 0 4px 12px rgba(140, 120, 98, 0.3);
 }

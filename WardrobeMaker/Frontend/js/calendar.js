@@ -62,8 +62,10 @@ async function loadCalendarData() {
         ]);
         if (calendarRes.ok) scheduledOutfits = await calendarRes.json();
         if (lookbookRes.ok) lookbookOutfits = await lookbookRes.json();
+
         updateCalendar();
-        updateTodayTomorrowCards();
+
+        renderSidebar(new Date().toISOString().split('T')[0]);
     } catch (err) {
         console.error('Error loading calendar data:', err);
     }
@@ -75,117 +77,108 @@ function updateCalendar() {
     const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     document.getElementById('currentMonthYear').innerText = `${monthNames[month]} ${year}`;
 
-    const now = new Date();
-    const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
-    const options = { month: 'short', day: 'numeric' };
-    document.getElementById('todayChip').innerText = `Today \u2022 ${now.toLocaleDateString('en-US', options)}`;
-    document.getElementById('tomorrowChip').innerText = `Tomorrow \u2022 ${tomorrow.toLocaleDateString('en-US', options)}`;
-
     const grid = document.getElementById('calendarGrid');
-    grid.innerHTML = `
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">S</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">M</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">T</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">W</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">T</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">F</span>
-        <span class="text-[10px] font-bold text-gray-300 uppercase mb-2">S</span>
-    `;
+    grid.innerHTML = '';
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const todayStr = new Date().toISOString().split('T')[0];
 
-    for (let i = 0; i < firstDay; i++) grid.appendChild(document.createElement('div'));
+    for (let i = 0; i < firstDay; i++) {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.classList.add('opacity-0');
+        grid.appendChild(emptyDiv);
+    }
 
     for (let i = 1; i <= daysInMonth; i++) {
         const dayDiv = document.createElement('div');
         const dateString = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-        dayDiv.classList.add('cal-day');
-        if (dateString === todayStr) dayDiv.classList.add('active');
+
+        dayDiv.classList.add('cal-day-box');
+        if (dateString === todayStr) dayDiv.classList.add('active'); // Highlight today
+
+        let cellHtml = `<span class="day-number">${i}</span>`;
+
         const scheduled = scheduledOutfits.find(s => s.date === dateString);
-        if (scheduled) dayDiv.classList.add('has-event');
-        dayDiv.innerText = i;
+        if (scheduled) {
+            const items = [scheduled.top, scheduled.bottom, scheduled.shoes].filter(Boolean); // Filter out nulls
+            const imagesHtml = items.map(item => {
+                return item.imageFilePath
+                    ? `<div class="mini-cal-item"><img src="${item.imageFilePath}"></div>`
+                    : `<div class="mini-cal-item flex items-center justify-center"><i class="fas fa-tshirt text-[10px] text-gray-300"></i></div>`;
+            }).join('');
+
+            cellHtml += `<div class="mini-cal-stack">${imagesHtml}</div>`;
+        }
+
+        dayDiv.innerHTML = cellHtml;
+
         dayDiv.onclick = () => {
-            if (scheduled) showScheduledOutfit(scheduled, dateString);
-            else openScheduleModal(dateString);
+            document.querySelectorAll('.cal-day-box').forEach(el => el.classList.remove('active', 'border-[var(--earth-brown)]'));
+            dayDiv.classList.add('active', 'border-[var(--earth-brown)]');
+
+            renderSidebar(dateString, scheduled);
         };
+
         grid.appendChild(dayDiv);
     }
 }
 
-function updateTodayTomorrowCards() {
-    const now = new Date();
-    const todayStr = now.toISOString().split('T')[0];
-    const tomorrow = new Date(now); tomorrow.setDate(now.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
-    updateSlot('today', todayStr);
-    updateSlot('tomorrow', tomorrowStr);
-}
+let currentSelectedDateStr = new Date().toISOString().split('T')[0];
 
-function updateSlot(slotId, dateStr) {
-    const stack = document.getElementById(`${slotId}Stack`);
-    const title = document.getElementById(`${slotId}Title`);
-    const desc = document.getElementById(`${slotId}Desc`);
-    const scheduled = scheduledOutfits.find(s => s.date === dateStr);
+function renderSidebar(dateStr, scheduledOutfit = null) {
+    currentSelectedDateStr = dateStr;
+    const dateObj = new Date(dateStr + 'T00:00:00');
 
-    const existingRemove = desc?.parentElement.querySelector('.remove-schedule-btn');
-    if (existingRemove) existingRemove.remove();
+    document.getElementById('sidebarDateTitle').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+    document.getElementById('sidebarDateSub').innerText = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
-    if (scheduled) {
-        const items = [scheduled.top, scheduled.bottom, scheduled.shoes];
-        stack.innerHTML = items.map(item => {
+    const contentArea = document.getElementById('sidebarContent');
+
+    if (!scheduledOutfit) {
+        scheduledOutfit = scheduledOutfits.find(s => s.date === dateStr);
+    }
+
+    if (scheduledOutfit) {
+        const items = [scheduledOutfit.top, scheduledOutfit.bottom, scheduledOutfit.shoes].filter(Boolean);
+        const stackHtml = items.map(item => {
             return item.imageFilePath
-                ? `<div class="stack-circle"><img src="${item.imageFilePath}"></div>`
-                : `<div class="stack-circle"><i class="fas fa-tshirt text-gray-300"></i></div>`;
+                ? `<div class="stack-circle w-24 h-24 mb-2"><img src="${item.imageFilePath}"></div>`
+                : `<div class="stack-circle w-24 h-24 mb-2 flex items-center justify-center"><i class="fas fa-tshirt text-3xl text-gray-300"></i></div>`;
         }).join('');
-        title.innerText = scheduled.outfitName;
-        if (desc) desc.innerText = 'Looking sharp!';
 
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-schedule-btn text-xs text-red-400 hover:text-red-600 font-bold mt-2';
-        removeBtn.innerHTML = '<i class="fas fa-times"></i> Remove';
-        removeBtn.onclick = () => removeSchedule(dateStr);
-        desc.parentElement.appendChild(removeBtn);
+        contentArea.innerHTML = `
+            <div class="flex justify-center -space-x-4 mb-6">
+                ${stackHtml}
+            </div>
+            <h3 class="text-2xl font-bold text-[var(--text-main)] mb-1">${scheduledOutfit.outfitName}</h3>
+            <p class="text-[var(--earth-brown)] text-xs font-bold uppercase tracking-widest mb-6"><i class="fas fa-check-circle"></i> Ready to Wear</p>
+            <button onclick="removeSchedule('${dateStr}')" class="text-red-400 hover:text-red-600 text-sm font-bold transition">
+                <i class="fas fa-trash-alt"></i> Remove Look
+            </button>
+        `;
     } else {
-        stack.innerHTML = `<div class="stack-circle"><i class="fas fa-plus opacity-20"></i></div>`;
-        title.innerText = slotId === 'today' ? 'No Outfit Scheduled' : 'Planning Ahead?';
-        if (desc) desc.innerText = slotId === 'today' ? 'Plan your look for today.' : 'Stay ahead of your week.';
+        contentArea.innerHTML = `
+            <div class="w-32 h-32 rounded-full bg-[var(--beige-light)] flex items-center justify-center mb-6 mt-4">
+                <i class="fas fa-ghost text-4xl text-gray-300"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-400 mb-2">Nothing Planned</h3>
+            <p class="text-sm text-gray-400 max-w-[200px]">Your canvas is blank for this day. Time to get creative!</p>
+        `;
     }
 }
 
-function showScheduledOutfit(scheduled, dateString) {
-    // Update the today slot to show the clicked date's outfit
-    const stack = document.getElementById('todayStack');
-    const title = document.getElementById('todayTitle');
-    const desc = document.getElementById('todayDesc');
-    const chip = document.getElementById('todayChip');
+function navigateDay(direction) {
+    const d = new Date(currentSelectedDateStr + 'T00:00:00');
+    d.setDate(d.getDate() + direction);
+    const newDateStr = d.toISOString().split('T')[0];
 
-    const existingRemove = desc?.parentElement.querySelector('.remove-schedule-btn');
-    if (existingRemove) existingRemove.remove();
+    if (d.getMonth() !== currentCalendarDate.getMonth()) {
+        currentCalendarDate = new Date(d);
+        updateCalendar();
+    }
 
-    const items = [scheduled.top, scheduled.bottom, scheduled.shoes];
-    stack.innerHTML = items.map(item => {
-        return item.imageFilePath
-            ? `<div class="stack-circle"><img src="${item.imageFilePath}"></div>`
-            : `<div class="stack-circle"><i class="fas fa-tshirt text-gray-300"></i></div>`;
-    }).join('');
-    
-    title.innerText = scheduled.outfitName;
-    if (desc) desc.innerText = 'Looking sharp!';
-    
-    // Update chip to show the selected date
-    const dateObj = new Date(dateString + 'T00:00:00');
-    const options = { month: 'short', day: 'numeric' };
-    chip.innerText = `${dateObj.toLocaleDateString('en-US', options)} \u2022 Scheduled`;
-
-    const removeBtn = document.createElement('button');
-    removeBtn.className = 'remove-schedule-btn text-xs text-red-400 hover:text-red-600 font-bold mt-2';
-    removeBtn.innerHTML = '<i class="fas fa-times"></i> Remove';
-    removeBtn.onclick = () => removeSchedule(dateString);
-    desc.parentElement.appendChild(removeBtn);
-
-    document.getElementById('slot-today').scrollIntoView({ behavior: 'smooth' });
+    renderSidebar(newDateStr);
 }
 
 function openScheduleModal(preselectedDate) {

@@ -21,9 +21,15 @@
 }
 
 /* Specific colors for the stat cards */
-.bg-clean { background-color: #b3a08d; }
-.bg-laundry { background-color: #cec2b3; }
-.bg-saved { background-color: #6b5d4d; }
+.bg-clean { 
+    background: linear-gradient(135deg, #8c7862 0%, #a89680 100%);
+}
+.bg-laundry { 
+    background: linear-gradient(135deg, #b3a08d 0%, #c2b4a3 100%);
+}
+.bg-saved { 
+    background: linear-gradient(135deg, #6b5d4d 0%, #8c7862 100%);
+}
 
 .gradient-btn {
     background: linear-gradient(90deg, #b09a84 0%, #8c7862 100%);
@@ -49,12 +55,49 @@
 }
 
 .stat-card {
-    min-height: 120px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    transition: all 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 24px -8px rgba(140, 120, 98, 0.15);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 36px -8px rgba(140, 120, 98, 0.25);
+}
+
+.stat-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.stat-card #total-items,
+.stat-card #clean-items,
+.stat-card #in-laundry,
+.stat-card #saved-outfits,
+.stat-card #scheduled {
+    font-size: 2.5rem;
+    line-height: 1;
+}
+
+.stat-card .text-sm {
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,174 @@
+{
+  "inventory": [
+    {
+      "itemID": "TOP-1778048469663",
+      "name": "Denim Jacket",
+      "primaryColor": "Blue",
+      "tags": [
+        "layering"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/9e194055-08f3-4e5b-9b24-18ce78bad138.webp",
+      "isClean": true,
+      "type": "Top",
+      "length": ""
+    },
+    {
+      "itemID": "TOP-1778051366421",
+      "name": "White Shirt",
+      "primaryColor": "White",
+      "tags": [
+        "Oversized",
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/36e3597d-484b-4ed5-846a-1ab36b6dd7c6.jpg",
+      "isClean": true,
+      "type": "Top",
+      "length": ""
+    },
+    {
+      "itemID": "TOP-1778051422723",
+      "name": "Black Shirt",
+      "primaryColor": "Black",
+      "tags": [
+        "Oversized",
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/6094ac3e-3ce6-43b4-846b-43f5b21c232c.jpg",
+      "isClean": true,
+      "type": "Top",
+      "length": ""
+    },
+    {
+      "itemID": "BOT-1778051537823",
+      "name": "Sweat Pants",
+      "primaryColor": "Grey",
+      "tags": [
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/33f11d30-2dd3-49ca-b556-a4c5cdcf1e3e.jpg",
+      "isClean": true,
+      "type": "Bottom",
+      "length": ""
+    },
+    {
+      "itemID": "BOT-1778051559490",
+      "name": "Denim Pants",
+      "primaryColor": "Blue",
+      "tags": [
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/4a71e27f-f06b-4861-a39b-838583bee4b8.jpg",
+      "isClean": true,
+      "type": "Bottom",
+      "length": ""
+    },
+    {
+      "itemID": "BOT-1778051580837",
+      "name": "Khaki Pants",
+      "primaryColor": "Grey",
+      "tags": [
+        "Formal"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/6d86573d-84b7-4560-a78c-06ff2257d691.jpg",
+      "isClean": true,
+      "type": "Bottom",
+      "length": ""
+    },
+    {
+      "itemID": "FOO-1778051643759",
+      "name": "Sneakers",
+      "primaryColor": "White",
+      "tags": [
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/99b4c63e-78c0-49d3-a263-748cc96774f1.jpg",
+      "isClean": true,
+      "type": "Footwear",
+      "length": ""
+    },
+    {
+      "itemID": "FOO-1778051659733",
+      "name": "Sneakers",
+      "primaryColor": "White",
+      "tags": [
+        "Casual",
+        "Running"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/e06019a4-74e1-4cb1-8281-06d0eb5b96f9.jpg",
+      "isClean": true,
+      "type": "Footwear",
+      "length": ""
+    },
+    {
+      "itemID": "FOO-1778051691750",
+      "name": "Leather Shoes",
+      "primaryColor": "Brown",
+      "tags": [
+        "Formal"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/77294e47-c2dd-4a91-a4e4-da0c17e35fc6.jpg",
+      "isClean": true,
+      "type": "Footwear",
+      "length": ""
+    }
+  ],
+  "lookbook": [
+    {
+      "outfitID": "OFT-1778051714508",
+      "outfitName": "Casual-Formal",
+      "topID": "TOP-1778051422723",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051691750",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778051749814",
+      "outfitName": "Casual Monday",
+      "topID": "TOP-1778051366421",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051643759",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778051761192",
+      "outfitName": "Casual Monday(black)",
+      "topID": "TOP-1778051422723",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051643759",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778051768986",
+      "outfitName": "Dog",
+      "topID": "TOP-1778048469663",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778051780581",
+      "outfitName": "Dogsh8",
+      "topID": "TOP-1778048469663",
+      "bottomID": "BOT-1778051537823",
+      "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    }
+  ],
+  "schedules": {
+    "2026-05-06": [
+      "OFT-1778051714508",
+      "OFT-1778051761192",
+      "OFT-1778051780581",
+      "OFT-1778051768986"
+    ],
+    "2026-05-07": [
+      "OFT-1778051768986",
+      "OFT-1778051780581"
+    ]
+  }
+}

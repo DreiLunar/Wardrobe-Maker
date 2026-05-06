@@ -6,9 +6,9 @@ namespace WardrobeMaker
     {
         public string OutfitID { get; set; }
         public string OutfitName { get; set; }
-        public Top SelectedTop { get; set; }
-        public Bottom SelectedBottom { get; set; }
-        public Dress SelectedDress { get; set; }
+        public Top? SelectedTop { get; set; }
+        public Bottom? SelectedBottom { get; set; }
+        public Dress? SelectedDress { get; set; }
         public Footwear SelectedShoes { get; set; }
         public DateTime? ScheduledDate { get; set; }
 

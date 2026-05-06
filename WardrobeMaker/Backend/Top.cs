@@ -5,11 +5,13 @@ namespace WardrobeMaker
     public class Top : ClothingItem
     {
         public string SleeveType { get; set; }
+        public string Length { get; set; }
 
         public Top(string itemID, string name, string primaryColor, List<string> tags, string sleeveType, string imageFilePath = "")
             : base(itemID, name, primaryColor, tags, imageFilePath)
         {
             SleeveType = sleeveType;
+            Length = "";
         }
 
         public override string GetDetails()

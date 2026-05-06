@@ -13,13 +13,13 @@ namespace WardrobeMaker
 
         public List<ClothingItem> Inventory { get; set; }
         public List<Outfit> Lookbook { get; set; }
-        public Dictionary<string, string> Schedules { get; set; }
+        public Dictionary<string, List<string>> Schedules { get; set; }
 
         public WardrobeManager()
         {
             Inventory = new List<ClothingItem>();
             Lookbook = new List<Outfit>();
-            Schedules = new Dictionary<string, string>();
+            Schedules = new Dictionary<string, List<string>>();
 
             _dataFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wardrobe-data.json");
             _jsonOptions = new JsonSerializerOptions
@@ -67,10 +67,14 @@ namespace WardrobeMaker
             if (outfit != null)
             {
                 Lookbook.Remove(outfit);
-                var datesToRemove = Schedules.Where(s => s.Value == outfitId).Select(s => s.Key).ToList();
-                foreach (var date in datesToRemove)
+                var datesToUpdate = Schedules.Where(s => s.Value.Contains(outfitId)).Select(s => s.Key).ToList();
+                foreach (var date in datesToUpdate)
                 {
-                    Schedules.Remove(date);
+                    Schedules[date].Remove(outfitId);
+                    if (Schedules[date].Count == 0)
+                    {
+                        Schedules.Remove(date);
+                    }
                 }
 
                 SaveData();
@@ -87,34 +91,38 @@ namespace WardrobeMaker
 
         public void UpdateSchedule(string date, string outfitId)
         {
-            var previousDate = Schedules.FirstOrDefault(s => s.Value == outfitId).Key;
-            if (!string.IsNullOrEmpty(previousDate) && previousDate != date)
+            if (!Schedules.ContainsKey(date))
             {
-                Schedules.Remove(previousDate);
+                Schedules[date] = new List<string>();
             }
 
-            Schedules[date] = outfitId;
-            var outfit = Lookbook.Find(o => o.OutfitID == outfitId);
-            if (outfit != null && DateTime.TryParse(date, out var scheduled))
+            if (!Schedules[date].Contains(outfitId))
             {
-                outfit.ScheduledDate = scheduled;
+                Schedules[date].Add(outfitId);
             }
 
             SaveData();
         }
 
-        public void RemoveSchedule(string date)
+        public void RemoveSchedule(string date, string outfitId = null)
         {
-            if (Schedules.Remove(date))
-            {
-                var outfit = Lookbook.Find(o => o.ScheduledDate.HasValue && o.ScheduledDate.Value.ToString("yyyy-MM-dd") == date);
-                if (outfit != null)
-                {
-                    outfit.ScheduledDate = null;
-                }
+            if (!Schedules.ContainsKey(date))
+                return;
 
-                SaveData();
+            if (outfitId != null)
+            {
+                Schedules[date].Remove(outfitId);
+                if (Schedules[date].Count == 0)
+                {
+                    Schedules.Remove(date);
+                }
             }
+            else
+            {
+                Schedules.Remove(date);
+            }
+
+            SaveData();
         }
 
         public List<ClothingItem> GetAvailableItems(string tag = "")
@@ -216,7 +224,7 @@ namespace WardrobeMaker
                     {
                         Inventory = persisted.Inventory.Select(ToClothingItem).Where(item => item != null).ToList()!;
                         Lookbook = persisted.Lookbook.Select(ToOutfit).Where(outfit => outfit != null).ToList()!;
-                        Schedules = persisted.Schedules ?? new Dictionary<string, string>();
+                        Schedules = persisted.Schedules ?? new Dictionary<string, List<string>>();
                         return;
                     }
                 }
@@ -250,10 +258,7 @@ namespace WardrobeMaker
                 {
                     IsClean = source.IsClean
                 },
-                _ => new ClothingItem(source.ItemID, source.Name, source.PrimaryColor, source.Tags ?? new List<string>(), source.ImageFilePath ?? string.Empty)
-                {
-                    IsClean = source.IsClean
-                }
+                _ => throw new InvalidOperationException($"Unknown clothing item type: {source.Type}")
             };
         }
 
@@ -342,7 +347,7 @@ namespace WardrobeMaker
         {
             public List<PersistedClothingItem> Inventory { get; set; } = new();
             public List<PersistedOutfit> Lookbook { get; set; } = new();
-            public Dictionary<string, string> Schedules { get; set; } = new();
+            public Dictionary<string, List<string>> Schedules { get; set; } = new();
         }
 
         private class PersistedClothingItem

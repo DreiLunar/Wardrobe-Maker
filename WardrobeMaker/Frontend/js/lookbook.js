@@ -16,7 +16,6 @@ async function resolveApiHost() {
                 return resolvedApiHost;
             }
         } catch {
-            // Try next host
         }
     }
 
@@ -71,10 +70,11 @@ const LookbookApp = {
 
         grid.innerHTML = this.outfits.map((outfit) => {
             const items = [outfit.top, outfit.bottom, outfit.shoes];
-            const imagesHtml = items.map(item => {
+            const imagesHtml = items.map((item, idx) => {
+                const itemLabel = idx === 0 ? 'Top' : idx === 1 ? 'Bottom' : 'Shoes';
                 return item.imageFilePath
-                    ? `<div class="stack-item"><img src="${item.imageFilePath}" alt="${item.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-tshirt text-gray-300\'></i>';"></div>`
-                    : `<div class="stack-item"><i class="fas fa-tshirt text-gray-300"></i></div>`;
+                    ? `<div class="lookbook-item"><img src="${item.imageFilePath}" alt="${item.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-tshirt text-gray-300 text-2xl\'></i>';"><span class="item-label">${itemLabel}</span></div>`
+                    : `<div class="lookbook-item"><i class="fas fa-tshirt text-gray-300 text-2xl"></i><span class="item-label">${itemLabel}</span></div>`;
             }).join('');
 
             const scheduledHtml = outfit.scheduledDate
@@ -90,7 +90,7 @@ const LookbookApp = {
                     </button>
                 </div>
 
-                <div class="image-stack mb-4">
+                <div class="image-grid mb-4">
                     ${imagesHtml}
                 </div>
 
@@ -101,6 +101,7 @@ const LookbookApp = {
                         <span>•</span>
                         <span>${outfit.isReady ? 'Ready to Wear' : 'Items in Laundry'}</span>
                     </div>
+                </div> 
             </div>`;
         }).join('');
     },

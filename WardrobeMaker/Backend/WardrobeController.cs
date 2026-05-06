@@ -316,40 +316,43 @@ namespace WardrobeMaker
             var scheduled = new List<object>();
             foreach (var entry in _manager.Schedules)
             {
-                var outfit = _manager.Lookbook.Find(o => o.OutfitID == entry.Value);
-                if (outfit != null)
+                foreach (var outfitId in entry.Value)
                 {
-                    scheduled.Add(new
+                    var outfit = _manager.Lookbook.Find(o => o.OutfitID == outfitId);
+                    if (outfit != null)
                     {
-                        Date = entry.Key,
-                        outfit.OutfitID,
-                        outfit.OutfitName,
-                        IsDressOutfit = outfit.IsDressOutfit,
-                        Top = outfit.SelectedTop != null ? new
+                        scheduled.Add(new
                         {
-                            outfit.SelectedTop.ItemID,
-                            outfit.SelectedTop.Name,
-                            outfit.SelectedTop.ImageFilePath
-                        } : null,
-                        Bottom = outfit.SelectedBottom != null ? new
-                        {
-                            outfit.SelectedBottom.ItemID,
-                            outfit.SelectedBottom.Name,
-                            outfit.SelectedBottom.ImageFilePath
-                        } : null,
-                        Dress = outfit.SelectedDress != null ? new
-                        {
-                            outfit.SelectedDress.ItemID,
-                            outfit.SelectedDress.Name,
-                            outfit.SelectedDress.ImageFilePath
-                        } : null,
-                        Shoes = new
-                        {
-                            outfit.SelectedShoes.ItemID,
-                            outfit.SelectedShoes.Name,
-                            outfit.SelectedShoes.ImageFilePath
-                        }
-                    });
+                            Date = entry.Key,
+                            outfit.OutfitID,
+                            outfit.OutfitName,
+                            IsDressOutfit = outfit.IsDressOutfit,
+                            Top = outfit.SelectedTop != null ? new
+                            {
+                                outfit.SelectedTop.ItemID,
+                                outfit.SelectedTop.Name,
+                                outfit.SelectedTop.ImageFilePath
+                            } : null,
+                            Bottom = outfit.SelectedBottom != null ? new
+                            {
+                                outfit.SelectedBottom.ItemID,
+                                outfit.SelectedBottom.Name,
+                                outfit.SelectedBottom.ImageFilePath
+                            } : null,
+                            Dress = outfit.SelectedDress != null ? new
+                            {
+                                outfit.SelectedDress.ItemID,
+                                outfit.SelectedDress.Name,
+                                outfit.SelectedDress.ImageFilePath
+                            } : null,
+                            Shoes = new
+                            {
+                                outfit.SelectedShoes.ItemID,
+                                outfit.SelectedShoes.Name,
+                                outfit.SelectedShoes.ImageFilePath
+                            }
+                        });
+                    }
                 }
             }
             return Ok(scheduled);
@@ -372,12 +375,12 @@ namespace WardrobeMaker
 
         // DELETE /api/wardrobe/calendar/{date}
         [HttpDelete("calendar/{date}")]
-        public IActionResult RemoveSchedule(string date)
+        public IActionResult RemoveSchedule(string date, [FromQuery] string outfitId = null)
         {
             if (!_manager.Schedules.ContainsKey(date))
                 return NotFound(new { message = "No schedule found for this date." });
 
-            _manager.RemoveSchedule(date);
+            _manager.RemoveSchedule(date, outfitId);
             return Ok(new { message = "Schedule removed successfully." });
         }
     }

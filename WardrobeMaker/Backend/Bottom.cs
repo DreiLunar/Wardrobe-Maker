@@ -5,11 +5,13 @@ namespace WardrobeMaker
     public class Bottom : ClothingItem
     {
         public string FitType { get; set; }
+        public string Length { get; set; }
 
         public Bottom(string itemID, string name, string primaryColor, List<string> tags, string fitType, string imageFilePath = "")
             : base(itemID, name, primaryColor, tags, imageFilePath)
         {
             FitType = fitType;
+            Length = "";
         }
 
         public override string GetDetails()

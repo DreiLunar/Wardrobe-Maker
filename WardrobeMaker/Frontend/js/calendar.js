@@ -95,20 +95,30 @@ function updateCalendar() {
         const dateString = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
 
         dayDiv.classList.add('cal-day-box');
-        if (dateString === todayStr) dayDiv.classList.add('active'); // Highlight today
+        if (dateString === todayStr) dayDiv.classList.add('active');
 
         let cellHtml = `<span class="day-number">${i}</span>`;
 
-        const scheduled = scheduledOutfits.find(s => s.date === dateString);
-        if (scheduled) {
-            const items = [scheduled.top, scheduled.bottom, scheduled.shoes].filter(Boolean); // Filter out nulls
-            const imagesHtml = items.map(item => {
-                return item.imageFilePath
-                    ? `<div class="mini-cal-item"><img src="${item.imageFilePath}"></div>`
-                    : `<div class="mini-cal-item flex items-center justify-center"><i class="fas fa-tshirt text-[10px] text-gray-300"></i></div>`;
-            }).join('');
+        const dayOutfits = scheduledOutfits.filter(s => s.date === dateString);
+        if (dayOutfits.length > 0) {
+            let cardsHtml = '';
+            dayOutfits.forEach((outfit, idx) => {
+                const topImg = outfit.top?.imageFilePath || '';
+                const bottomImg = outfit.bottom?.imageFilePath || '';
+                const shoesImg = outfit.shoes?.imageFilePath || '';
+                
+                cardsHtml += `
+                    <div class="outfit-card-stack" style="--card-index: ${idx}; z-index: ${dayOutfits.length - idx};">
+                        <div class="outfit-card-inner">
+                            <div class="outfit-card-piece" style="background-image: url('${topImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                            <div class="outfit-card-piece" style="background-image: url('${bottomImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                            <div class="outfit-card-piece" style="background-image: url('${shoesImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                        </div>
+                    </div>
+                `;
+            });
 
-            cellHtml += `<div class="mini-cal-stack">${imagesHtml}</div>`;
+            cellHtml += `<div class="outfit-cards-container">${cardsHtml}</div>`;
         }
 
         dayDiv.innerHTML = cellHtml;
@@ -117,7 +127,7 @@ function updateCalendar() {
             document.querySelectorAll('.cal-day-box').forEach(el => el.classList.remove('active', 'border-[var(--earth-brown)]'));
             dayDiv.classList.add('active', 'border-[var(--earth-brown)]');
 
-            renderSidebar(dateString, scheduled);
+            renderSidebar(dateString);
         };
 
         grid.appendChild(dayDiv);
@@ -125,38 +135,21 @@ function updateCalendar() {
 }
 
 let currentSelectedDateStr = new Date().toISOString().split('T')[0];
+let currentOutfitIndex = 0;
 
-function renderSidebar(dateStr, scheduledOutfit = null) {
+function renderSidebar(dateStr) {
     currentSelectedDateStr = dateStr;
+    currentOutfitIndex = 0;
     const dateObj = new Date(dateStr + 'T00:00:00');
 
     document.getElementById('sidebarDateTitle').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
     document.getElementById('sidebarDateSub').innerText = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     const contentArea = document.getElementById('sidebarContent');
+    const dayOutfits = scheduledOutfits.filter(s => s.date === dateStr);
 
-    if (!scheduledOutfit) {
-        scheduledOutfit = scheduledOutfits.find(s => s.date === dateStr);
-    }
-
-    if (scheduledOutfit) {
-        const items = [scheduledOutfit.top, scheduledOutfit.bottom, scheduledOutfit.shoes].filter(Boolean);
-        const stackHtml = items.map(item => {
-            return item.imageFilePath
-                ? `<div class="stack-circle w-24 h-24 mb-2"><img src="${item.imageFilePath}"></div>`
-                : `<div class="stack-circle w-24 h-24 mb-2 flex items-center justify-center"><i class="fas fa-tshirt text-3xl text-gray-300"></i></div>`;
-        }).join('');
-
-        contentArea.innerHTML = `
-            <div class="flex justify-center -space-x-4 mb-6">
-                ${stackHtml}
-            </div>
-            <h3 class="text-2xl font-bold text-[var(--text-main)] mb-1">${scheduledOutfit.outfitName}</h3>
-            <p class="text-[var(--earth-brown)] text-xs font-bold uppercase tracking-widest mb-6"><i class="fas fa-check-circle"></i> Ready to Wear</p>
-            <button onclick="removeSchedule('${dateStr}')" class="text-red-400 hover:text-red-600 text-sm font-bold transition">
-                <i class="fas fa-trash-alt"></i> Remove Look
-            </button>
-        `;
+    if (dayOutfits.length > 0) {
+        renderOutfitCard(contentArea, dayOutfits, 0);
     } else {
         contentArea.innerHTML = `
             <div class="w-32 h-32 rounded-full bg-[var(--beige-light)] flex items-center justify-center mb-6 mt-4">
@@ -168,8 +161,76 @@ function renderSidebar(dateStr, scheduledOutfit = null) {
     }
 }
 
+function renderOutfitCard(contentArea, dayOutfits, index) {
+    currentOutfitIndex = index;
+    const outfit = dayOutfits[index];
+    
+    const items = [outfit.top, outfit.bottom, outfit.shoes].filter(Boolean);
+    let stackHtml = '';
+    
+    if (outfit.top) {
+        stackHtml += `
+            <div class="outfit-piece">
+                <img src="${outfit.top.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3ETop%3C/text%3E%3C/svg%3E'}" alt="Top">
+            </div>
+        `;
+    }
+    
+    if (outfit.bottom) {
+        stackHtml += `
+            <div class="outfit-piece">
+                <img src="${outfit.bottom.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3EBottom%3C/text%3E%3C/svg%3E'}" alt="Bottom">
+            </div>
+        `;
+    }
+    
+    if (outfit.shoes) {
+        stackHtml += `
+            <div class="outfit-piece">
+                <img src="${outfit.shoes.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3EShoes%3C/text%3E%3C/svg%3E'}" alt="Shoes">
+            </div>
+        `;
+    }
+    
+    let navigationHtml = '';
+    if (dayOutfits.length > 1) {
+        navigationHtml = `
+            <div class="text-xs text-gray-500 font-semibold mb-4">
+                Outfit ${index + 1} of ${dayOutfits.length}
+            </div>
+        `;
+    }
+    
+    contentArea.innerHTML = `
+        ${navigationHtml}
+        <div class="outfit-display-with-arrows">
+            ${dayOutfits.length > 1 ? `<button onclick="changeOutfit(-1)" class="arrow-button arrow-left"><i class="fas fa-chevron-left"></i></button>` : ''}
+            <div class="outfit-display">
+                ${stackHtml}
+            </div>
+            ${dayOutfits.length > 1 ? `<button onclick="changeOutfit(1)" class="arrow-button arrow-right"><i class="fas fa-chevron-right"></i></button>` : ''}
+        </div>
+        <h3 class="text-xl font-bold text-[var(--text-main)] mb-2 mt-6">${outfit.outfitName}</h3>
+        <p class="text-[var(--earth-brown)] text-xs font-bold uppercase tracking-widest mb-4"><i class="fas fa-check-circle"></i> Ready to Wear</p>
+        <button onclick="removeOutfitFromDay('${currentSelectedDateStr}', '${outfit.outfitID}')" class="w-full text-red-400 hover:text-red-600 text-sm font-bold transition py-2">
+            <i class="fas fa-trash-alt"></i> Remove This Look
+        </button>
+    `;
+}
+
+function changeOutfit(direction) {
+    const dayOutfits = scheduledOutfits.filter(s => s.date === currentSelectedDateStr);
+    let newIndex = currentOutfitIndex + direction;
+    
+    if (newIndex < 0) newIndex = dayOutfits.length - 1;
+    if (newIndex >= dayOutfits.length) newIndex = 0;
+    
+    const contentArea = document.getElementById('sidebarContent');
+    renderOutfitCard(contentArea, dayOutfits, newIndex);
+}
+
 function navigateDay(direction) {
-    const d = new Date(currentSelectedDateStr + 'T00:00:00');
+    const d = new Date(currentSelectedDateStr);
     d.setDate(d.getDate() + direction);
     const newDateStr = d.toISOString().split('T')[0];
 
@@ -218,13 +279,25 @@ async function confirmSchedule() {
 }
 
 async function removeSchedule(dateStr) {
-    if (!confirm('Remove this scheduled outfit?')) return;
+    if (!confirm('Remove all scheduled outfits for this day?')) return;
     try {
         const response = await fetch(await getApiUrl(`/calendar/${dateStr}`), { method: 'DELETE' });
         if (!response.ok) throw new Error('Failed to remove schedule');
         await loadCalendarData();
     } catch (err) {
         console.error('Error removing schedule:', err);
+    }
+}
+
+async function removeOutfitFromDay(dateStr, outfitId) {
+    if (!confirm('Remove this outfit from this day?')) return;
+    try {
+        const response = await fetch(await getApiUrl(`/calendar/${dateStr}?outfitId=${outfitId}`), { method: 'DELETE' });
+        if (!response.ok) throw new Error('Failed to remove outfit');
+        await loadCalendarData();
+        renderSidebar(dateStr);
+    } catch (err) {
+        console.error('Error removing outfit:', err);
     }
 }
 

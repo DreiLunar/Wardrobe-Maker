@@ -110,6 +110,18 @@
       "isClean": true,
       "type": "Footwear",
       "length": ""
+    },
+    {
+      "itemID": "DRE-1778157033500",
+      "name": "Sundress",
+      "primaryColor": "White",
+      "tags": [
+        "Casual"
+      ],
+      "imageFilePath": "http://localhost:5000/uploads/d5d0317d-868a-4869-adf6-bec9684a2319.jpg",
+      "isClean": true,
+      "type": "Dress",
+      "length": "Knee"
     }
   ],
   "lookbook": [
@@ -155,6 +167,15 @@
       "topID": "TOP-1778048469663",
       "bottomID": "BOT-1778051537823",
       "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778157049090",
+      "outfitName": "Casual summer",
+      "topID": null,
+      "bottomID": null,
+      "dressID": "DRE-1778157033500",
       "shoesID": "FOO-1778051659733",
       "scheduledDate": null
     }

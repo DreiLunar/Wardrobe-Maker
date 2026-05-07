@@ -69,12 +69,23 @@ const LookbookApp = {
         if (controls) controls.classList.remove('hidden');
 
         grid.innerHTML = this.outfits.map((outfit) => {
-            const items = [outfit.top, outfit.bottom, outfit.shoes];
-            const imagesHtml = items.map((item, idx) => {
-                const itemLabel = idx === 0 ? 'Top' : idx === 1 ? 'Bottom' : 'Shoes';
-                return item.imageFilePath
-                    ? `<div class="lookbook-item"><img src="${item.imageFilePath}" alt="${item.name}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-tshirt text-gray-300 text-2xl\'></i>';"><span class="item-label">${itemLabel}</span></div>`
-                    : `<div class="lookbook-item"><i class="fas fa-tshirt text-gray-300 text-2xl"></i><span class="item-label">${itemLabel}</span></div>`;
+            const itemSlots = outfit?.dress
+                ? [
+                    { item: outfit.dress, label: 'Dress', cssClass: 'dress-item' },
+                    { item: outfit.shoes, label: 'Shoes' }
+                ]
+                : [
+                    { item: outfit?.top, label: 'Top' },
+                    { item: outfit?.bottom, label: 'Bottom' },
+                    { item: outfit?.shoes, label: 'Shoes' }
+                ];
+            const imagesHtml = itemSlots.map(({ item, label, cssClass }) => {
+                const imagePath = item?.imageFilePath;
+                const itemName = item?.name ?? label;
+                const itemClass = cssClass ? `lookbook-item ${cssClass}` : 'lookbook-item';
+                return imagePath
+                    ? `<div class="${itemClass}"><img src="${imagePath}" alt="${itemName}" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-tshirt text-gray-300 text-2xl\'></i>';"><span class="item-label">${label}</span></div>`
+                    : `<div class="${itemClass}"><i class="fas fa-tshirt text-gray-300 text-2xl"></i><span class="item-label">${label}</span></div>`;
             }).join('');
 
             const scheduledHtml = outfit.scheduledDate
@@ -97,7 +108,7 @@ const LookbookApp = {
                 <div class="text-center">
                     <h3 class="text-lg font-bold text-gray-800 mb-1 capitalize">${outfit.outfitName}</h3>
                     <div class="flex justify-center gap-2 text-gray-400 text-[10px] font-medium uppercase tracking-widest">
-                        <span>3 Items</span>
+                        <span>${itemSlots.length} Items</span>
                         <span>•</span>
                         <span>${outfit.isReady ? 'Ready to Wear' : 'Items in Laundry'}</span>
                     </div>

@@ -12,7 +12,7 @@ namespace WardrobeMaker
         public Footwear SelectedShoes { get; set; }
         public DateTime? ScheduledDate { get; set; }
 
-        // Constructor for Standard outfit (Top + Bottom + Footwear)
+        //Constructor for Standard outfit (Top + Bottom + Footwear)
         public Outfit(string outfitID, string outfitName, Top top, Bottom bottom, Footwear shoes)
         {
             OutfitID = outfitID;
@@ -24,7 +24,7 @@ namespace WardrobeMaker
             ScheduledDate = null;
         }
 
-        // Constructor for Dress outfit (Dress + Footwear)
+        //Constructor for Dress outfit (Dress + Footwear)
         public Outfit(string outfitID, string outfitName, Dress dress, Footwear shoes)
         {
             OutfitID = outfitID;
@@ -38,12 +38,12 @@ namespace WardrobeMaker
 
         public bool VerifyAvailability()
         {
-            // Standard outfit: Top + Bottom + Shoes
+            //Standard outfit: Top + Bottom + Shoes
             if (SelectedDress == null)
             {
                 return SelectedTop.IsClean && SelectedBottom.IsClean && SelectedShoes.IsClean;
             }
-            // Dress outfit: Dress + Shoes
+            //Dress outfit: Dress + Shoes
             return SelectedDress.IsClean && SelectedShoes.IsClean;
         }
 

@@ -44,7 +44,7 @@ app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
-// Add route mapping for HTML files in the html subdirectory
+//Add route mapping for HTML files in the html subdirectory
 app.MapGet("/{filename}", async (HttpContext context, string filename) =>
 {
     if (filename.EndsWith(".html") && !filename.StartsWith("html/"))

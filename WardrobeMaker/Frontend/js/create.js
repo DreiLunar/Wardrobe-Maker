@@ -184,52 +184,50 @@ function removeFromSlot(category) {
     slot.classList.remove('active');
 }
 
+function getActiveOutfitMode() {
+    const standardBtn = document.getElementById('btn-standard');
+    const dressBtn = document.getElementById('btn-dress');
+
+    if (standardBtn?.classList.contains('active')) return 'standard';
+    if (dressBtn?.classList.contains('active')) return 'dress';
+    return currentMode;
+}
+
+function pickRandomItem(items) {
+    return items[Math.floor(Math.random() * items.length)];
+}
+
 async function randomizeOutfit() {
     hideInlineError('saveError');
-    try {
-        const response = await fetch(await getApiUrl('/generate'));
-        if (!response.ok) {
-            const err = await response.json();
-            showInlineError('saveError', err.message || 'Not enough clean items to generate an outfit.'); return;
+    const activeMode = getActiveOutfitMode();
+    currentMode = activeMode;
+
+    const cleanTops = inventoryItems.filter(i => i.type === 'Top' && i.isClean);
+    const cleanBottoms = inventoryItems.filter(i => i.type === 'Bottom' && i.isClean);
+    const cleanDresses = inventoryItems.filter(i => i.type === 'Dress' && i.isClean);
+    const cleanFootwear = inventoryItems.filter(i => i.type === 'Footwear' && i.isClean);
+
+    clearAllSlots();
+
+    if (activeMode === 'standard') {
+        if (!cleanTops.length || !cleanBottoms.length || !cleanFootwear.length) {
+            showInlineError('saveError', 'Not enough clean Top, Bottom, and Footwear items to generate a standard outfit.');
+            return;
         }
-        const outfit = await response.json();
-        
-        // Clear current selections
-        clearAllSlots();
-        
-        // Check if this is a dress outfit
-        if (outfit.isDressOutfit) {
-            // Switch to dress mode
-            setOutfitMode('dress');
-            
-            if (outfit.dress) {
-                const dress = inventoryItems.find(i => i.itemID === outfit.dress.itemID);
-                if (dress) selectItem('dress', dress.itemID);
-            }
-            if (outfit.shoes) {
-                const shoes = inventoryItems.find(i => i.itemID === outfit.shoes.itemID);
-                if (shoes) selectItem('footwear', shoes.itemID);
-            }
-        } else {
-            // Standard outfit
-            setOutfitMode('standard');
-            
-            if (outfit.top) {
-                const top = inventoryItems.find(i => i.itemID === outfit.top.itemID);
-                if (top) selectItem('top', top.itemID);
-            }
-            if (outfit.bottom) {
-                const bottom = inventoryItems.find(i => i.itemID === outfit.bottom.itemID);
-                if (bottom) selectItem('bottom', bottom.itemID);
-            }
-            if (outfit.shoes) {
-                const shoes = inventoryItems.find(i => i.itemID === outfit.shoes.itemID);
-                if (shoes) selectItem('footwear', shoes.itemID);
-            }
-        }
-    } catch (err) {
-        showInlineError('saveError', 'Failed to generate outfit. Please try again.');
+
+        selectItem('top', pickRandomItem(cleanTops).itemID);
+        selectItem('bottom', pickRandomItem(cleanBottoms).itemID);
+        selectItem('footwear', pickRandomItem(cleanFootwear).itemID);
+        return;
     }
+
+    if (!cleanDresses.length || !cleanFootwear.length) {
+        showInlineError('saveError', 'Not enough clean Dress and Footwear items to generate a dress outfit.');
+        return;
+    }
+
+    selectItem('dress', pickRandomItem(cleanDresses).itemID);
+    selectItem('footwear', pickRandomItem(cleanFootwear).itemID);
 }
 
 async function saveOutfit() {

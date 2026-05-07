@@ -71,6 +71,10 @@
     flex-shrink: 0;
 }
 
+.lookbook-item.dress-item {
+    height: 190px;
+}
+
 .lookbook-item img {
     width: 100%;
     height: 100%;

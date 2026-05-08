@@ -112,16 +112,44 @@
       "length": ""
     },
     {
-      "itemID": "DRE-1778157033500",
+      "itemID": "DRE-1778210083373",
       "name": "Sundress",
       "primaryColor": "White",
-      "tags": [
-        "Casual"
-      ],
-      "imageFilePath": "http://localhost:5000/uploads/d5d0317d-868a-4869-adf6-bec9684a2319.jpg",
+      "tags": [],
+      "imageFilePath": "http://localhost:5000/uploads/ed89b3de-9bab-4d2b-846d-a1e560de5e2a.jpg",
       "isClean": true,
       "type": "Dress",
       "length": "Knee"
+    },
+    {
+      "itemID": "TOP-1778221832235",
+      "name": "Vintage Tee",
+      "primaryColor": "Brown",
+      "tags": [],
+      "imageFilePath": "http://localhost:5000/uploads/55b645f2-453d-4cac-afa7-c64bcf7c9f05.png",
+      "isClean": true,
+      "type": "Top",
+      "length": ""
+    },
+    {
+      "itemID": "TOP-1778221953598",
+      "name": "Collared Knit Top",
+      "primaryColor": "Gray",
+      "tags": [],
+      "imageFilePath": "http://localhost:5000/uploads/dc724ea8-3c90-49bb-8ba9-09d5866d1a52.png",
+      "isClean": true,
+      "type": "Top",
+      "length": ""
+    },
+    {
+      "itemID": "BOT-1778222063215",
+      "name": "Denim Jorts",
+      "primaryColor": "Black",
+      "tags": [],
+      "imageFilePath": "http://localhost:5000/uploads/9d21f98b-7707-412e-ab28-111a34c4d296.png",
+      "isClean": true,
+      "type": "Bottom",
+      "length": ""
     }
   ],
   "lookbook": [
@@ -162,20 +190,20 @@
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778051780581",
-      "outfitName": "Dogsh8",
-      "topID": "TOP-1778048469663",
-      "bottomID": "BOT-1778051537823",
-      "dressID": null,
-      "shoesID": "FOO-1778051659733",
+      "outfitID": "OFT-1778210098490",
+      "outfitName": "Summer",
+      "topID": null,
+      "bottomID": null,
+      "dressID": "DRE-1778210083373",
+      "shoesID": "FOO-1778051643759",
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778157049090",
-      "outfitName": "Casual summer",
-      "topID": null,
-      "bottomID": null,
-      "dressID": "DRE-1778157033500",
+      "outfitID": "OFT-1778228513693",
+      "outfitName": "Cool",
+      "topID": "TOP-1778221832235",
+      "bottomID": "BOT-1778222063215",
+      "dressID": null,
       "shoesID": "FOO-1778051659733",
       "scheduledDate": null
     }
@@ -184,12 +212,21 @@
     "2026-05-06": [
       "OFT-1778051714508",
       "OFT-1778051761192",
-      "OFT-1778051780581",
       "OFT-1778051768986"
     ],
     "2026-05-07": [
-      "OFT-1778051768986",
-      "OFT-1778051780581"
+      "OFT-1778051768986"
+    ],
+    "2026-05-08": [
+      "OFT-1778051714508",
+      "OFT-1778051749814",
+      "OFT-1778228513693"
+    ],
+    "2026-05-09": [
+      "OFT-1778228513693"
+    ],
+    "2026-06-01": [
+      "OFT-1778051714508"
     ]
   }
 }

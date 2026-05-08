@@ -1,108 +1,52 @@
 .hero-bg {
     position: relative;
     overflow: hidden;
-    min-height: 320px;
-    background: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+    min-height: 380px;
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.45)),
                 url('https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-    box-shadow: 0 25px 80px -40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
 }
 
-.hero-bg h1,
-.hero-bg p {
+.hero-bg h1, .hero-bg p, .hero-btns-container {
     position: relative;
-    z-index: 1;
-}
-
-.hero-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.38));
-}
-
-/* Specific colors for the stat cards */
-.bg-clean { 
-    background: linear-gradient(135deg, #8c7862 0%, #a89680 100%);
-}
-.bg-laundry { 
-    background: linear-gradient(135deg, #b3a08d 0%, #c2b4a3 100%);
-}
-.bg-saved { 
-    background: linear-gradient(135deg, #6b5d4d 0%, #8c7862 100%);
-}
-
-.gradient-btn {
-    background: linear-gradient(90deg, #b09a84 0%, #8c7862 100%);
-    transition: transform 0.2s;
-}
-
-.action-card {
-    transition: all 0.25s ease;
-    border-radius: 2rem;
-    background: white;
-    box-shadow: 0 8px 24px -16px rgba(0, 0, 0, 0.12);
-    border: 1px solid rgba(140, 120, 98, 0.12);
-}
-
-.action-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 18px 35px -18px rgba(0, 0, 0, 0.14);
-    border-color: #8c7862;
-}
-
-.action-card h3 {
-    color: #1f2937;
+    z-index: 10;
 }
 
 .stat-card {
-    min-height: 140px;
+    min-height: 150px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 1.5rem;
-    transition: all 0.3s ease;
-    cursor: default;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 24px -8px rgba(140, 120, 98, 0.15);
-}
-
-.stat-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
+    border-radius: 2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    box-shadow: 0 10px 20px -10px rgba(140, 120, 98, 0.3);
+    border: 2px solid transparent;
 }
 
 .stat-card:hover {
-    transform: translateY(-6px) scale(1.02);
-    box-shadow: 0 16px 36px -8px rgba(140, 120, 98, 0.25);
+    transform: scale(1.05) translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.6);
+    filter: brightness(1.15);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+    z-index: 20;
 }
 
-.stat-card > * {
-    position: relative;
-    z-index: 1;
+.action-card {
+    transition: all 0.3s ease;
+    border-radius: 2.2rem;
+    background: white;
+    border: 1px solid #eeebe6;
 }
 
-.stat-card #total-items,
-.stat-card #clean-items,
-.stat-card #in-laundry,
-.stat-card #saved-outfits,
-.stat-card #scheduled {
-    font-size: 2.5rem;
-    line-height: 1;
-}
-
-.stat-card .text-sm {
-    font-weight: 600;
-    letter-spacing: 0.5px;
+.action-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -20px rgba(0, 0, 0, 0.15);
+    border-color: #8c7862;
 }
 
 @media (max-width: 768px) {
-    .hero-bg {
-        min-height: 260px;
-        padding: 2.5rem;
-    }
+    .hero-bg { min-height: 300px; padding: 2rem; }
+    .stat-card { min-height: 120px; }
 }

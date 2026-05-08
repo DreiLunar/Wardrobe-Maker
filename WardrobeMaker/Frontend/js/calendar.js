@@ -7,7 +7,6 @@ let resolvedApiHost = '';
 
 async function resolveApiHost() {
     if (resolvedApiHost) return resolvedApiHost;
-
     for (const host of LOCAL_API_HOSTS) {
         try {
             const response = await fetch(`${host}/api/wardrobe/stats`, { method: 'GET', mode: 'cors' });
@@ -15,11 +14,8 @@ async function resolveApiHost() {
                 resolvedApiHost = host;
                 return resolvedApiHost;
             }
-        } catch {
-            // Try next host
-        }
+        } catch {}
     }
-
     resolvedApiHost = LOCAL_API_HOSTS[0];
     return resolvedApiHost;
 }
@@ -35,6 +31,8 @@ async function getApiUrl(path) {
 let currentCalendarDate = new Date();
 let scheduledOutfits = [];
 let lookbookOutfits = [];
+let currentSelectedDateStr = new Date().toISOString().split('T')[0];
+let currentOutfitIndex = 0;
 
 function showInlineError(elementId, message) {
     let el = document.getElementById(elementId);
@@ -64,8 +62,7 @@ async function loadCalendarData() {
         if (lookbookRes.ok) lookbookOutfits = await lookbookRes.json();
 
         updateCalendar();
-
-        renderSidebar(new Date().toISOString().split('T')[0]);
+        renderSidebar(currentSelectedDateStr);
     } catch (err) {
         console.error('Error loading calendar data:', err);
     }
@@ -96,170 +93,119 @@ function updateCalendar() {
 
         dayDiv.classList.add('cal-day-box');
         if (dateString === todayStr) dayDiv.classList.add('active');
+        if (dateString === currentSelectedDateStr) dayDiv.classList.add('border-[#8c7862]', 'border-2');
 
         let cellHtml = `<span class="day-number">${i}</span>`;
 
-        const dayOutfits = scheduledOutfits.filter(s => s.date === dateString);
+        const dayOutfits = scheduledOutfits.filter(s => s.date && s.date.startsWith(dateString));
+        
         if (dayOutfits.length > 0) {
             let cardsHtml = '';
             dayOutfits.forEach((outfit, idx) => {
-                const topImg = outfit.top?.imageFilePath || '';
-                const bottomImg = outfit.bottom?.imageFilePath || '';
-                const shoesImg = outfit.shoes?.imageFilePath || '';
-                
                 cardsHtml += `
                     <div class="outfit-card-stack" style="--card-index: ${idx}; z-index: ${dayOutfits.length - idx};">
                         <div class="outfit-card-inner">
-                            <div class="outfit-card-piece" style="background-image: url('${topImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
-                            <div class="outfit-card-piece" style="background-image: url('${bottomImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
-                            <div class="outfit-card-piece" style="background-image: url('${shoesImg}'); background-size: contain; background-repeat: no-repeat; background-position: center;"></div>
+                            <div class="outfit-card-piece" style="background-image: url('${outfit.top?.imageFilePath || ''}');"></div>
+                            <div class="outfit-card-piece" style="background-image: url('${outfit.bottom?.imageFilePath || ''}');"></div>
+                            <div class="outfit-card-piece" style="background-image: url('${outfit.shoes?.imageFilePath || ''}');"></div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
-
             cellHtml += `<div class="outfit-cards-container">${cardsHtml}</div>`;
         }
 
         dayDiv.innerHTML = cellHtml;
-
         dayDiv.onclick = () => {
-            document.querySelectorAll('.cal-day-box').forEach(el => el.classList.remove('active', 'border-[var(--earth-brown)]'));
-            dayDiv.classList.add('active', 'border-[var(--earth-brown)]');
-
+            currentSelectedDateStr = dateString;
+            updateCalendar(); // Refresh grid to show new border
             renderSidebar(dateString);
         };
-
         grid.appendChild(dayDiv);
     }
 }
 
-let currentSelectedDateStr = new Date().toISOString().split('T')[0];
-let currentOutfitIndex = 0;
-
 function renderSidebar(dateStr) {
     currentSelectedDateStr = dateStr;
-    currentOutfitIndex = 0;
     const dateObj = new Date(dateStr + 'T00:00:00');
 
     document.getElementById('sidebarDateTitle').innerText = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
     document.getElementById('sidebarDateSub').innerText = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 
     const contentArea = document.getElementById('sidebarContent');
-    const dayOutfits = scheduledOutfits.filter(s => s.date === dateStr);
+    const dayOutfits = scheduledOutfits.filter(s => s.date && s.date.startsWith(dateStr));
 
     if (dayOutfits.length > 0) {
         renderOutfitCard(contentArea, dayOutfits, 0);
     } else {
         contentArea.innerHTML = `
-            <div class="w-32 h-32 rounded-full bg-[var(--beige-light)] flex items-center justify-center mb-6 mt-4">
-                <i class="fas fa-ghost text-4xl text-gray-300"></i>
-            </div>
-            <h3 class="text-xl font-bold text-gray-400 mb-2">Nothing Planned</h3>
-            <p class="text-sm text-gray-400 max-w-[200px]">Your canvas is blank for this day. Time to get creative!</p>
-        `;
+            <div class="flex flex-col items-center justify-center mt-10">
+                <i class="fas fa-ghost text-5xl text-gray-200 mb-4"></i>
+                <p class="text-gray-400 text-sm">No looks planned for this day.</p>
+            </div>`;
     }
 }
 
 function renderOutfitCard(contentArea, dayOutfits, index) {
     currentOutfitIndex = index;
     const outfit = dayOutfits[index];
-    
-    const items = [outfit.top, outfit.bottom, outfit.shoes].filter(Boolean);
     let stackHtml = '';
     
-    if (outfit.top) {
-        stackHtml += `
-            <div class="outfit-piece">
-                <img src="${outfit.top.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3ETop%3C/text%3E%3C/svg%3E'}" alt="Top">
-            </div>
-        `;
-    }
+    if (outfit.top) stackHtml += `<div class="outfit-piece"><img src="${outfit.top.imageFilePath}" alt="Top"></div>`;
+    if (outfit.bottom) stackHtml += `<div class="outfit-piece"><img src="${outfit.bottom.imageFilePath}" alt="Bottom"></div>`;
+    if (outfit.shoes) stackHtml += `<div class="outfit-piece"><img src="${outfit.shoes.imageFilePath}" alt="Shoes"></div>`;
     
-    if (outfit.bottom) {
-        stackHtml += `
-            <div class="outfit-piece">
-                <img src="${outfit.bottom.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3EBottom%3C/text%3E%3C/svg%3E'}" alt="Bottom">
-            </div>
-        `;
-    }
-    
-    if (outfit.shoes) {
-        stackHtml += `
-            <div class="outfit-piece">
-                <img src="${outfit.shoes.imageFilePath || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23f5f5f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext text-anchor=%22middle%22 dy=%22.3em%22 y=%2250%22 x=%2250%22 font-size=%2212%22 fill=%22%23999%22%3EShoes%3C/text%3E%3C/svg%3E'}" alt="Shoes">
-            </div>
-        `;
-    }
-    
-    let navigationHtml = '';
-    if (dayOutfits.length > 1) {
-        navigationHtml = `
-            <div class="text-xs text-gray-500 font-semibold mb-4">
-                Outfit ${index + 1} of ${dayOutfits.length}
-            </div>
-        `;
-    }
+    let navigationHtml = dayOutfits.length > 1 ? `<div class="text-xs text-gray-500 font-semibold mb-4">Outfit ${index + 1} of ${dayOutfits.length}</div>` : '';
     
     contentArea.innerHTML = `
         ${navigationHtml}
         <div class="outfit-display-with-arrows">
             ${dayOutfits.length > 1 ? `<button onclick="changeOutfit(-1)" class="arrow-button arrow-left"><i class="fas fa-chevron-left"></i></button>` : ''}
-            <div class="outfit-display">
-                ${stackHtml}
-            </div>
+            <div class="outfit-display">${stackHtml}</div>
             ${dayOutfits.length > 1 ? `<button onclick="changeOutfit(1)" class="arrow-button arrow-right"><i class="fas fa-chevron-right"></i></button>` : ''}
         </div>
         <h3 class="text-xl font-bold text-[var(--text-main)] mb-2 mt-6">${outfit.outfitName}</h3>
-        <p class="text-[var(--earth-brown)] text-xs font-bold uppercase tracking-widest mb-4"><i class="fas fa-check-circle"></i> Ready to Wear</p>
         <button onclick="removeOutfitFromDay('${currentSelectedDateStr}', '${outfit.outfitID}')" class="w-full text-red-400 hover:text-red-600 text-sm font-bold transition py-2">
             <i class="fas fa-trash-alt"></i> Remove This Look
-        </button>
-    `;
+        </button>`;
 }
 
 function changeOutfit(direction) {
-    const dayOutfits = scheduledOutfits.filter(s => s.date === currentSelectedDateStr);
-    let newIndex = currentOutfitIndex + direction;
-    
-    if (newIndex < 0) newIndex = dayOutfits.length - 1;
-    if (newIndex >= dayOutfits.length) newIndex = 0;
-    
-    const contentArea = document.getElementById('sidebarContent');
-    renderOutfitCard(contentArea, dayOutfits, newIndex);
+    const dayOutfits = scheduledOutfits.filter(s => s.date && s.date.startsWith(currentSelectedDateStr));
+    currentOutfitIndex = (currentOutfitIndex + direction + dayOutfits.length) % dayOutfits.length;
+    renderOutfitCard(document.getElementById('sidebarContent'), dayOutfits, currentOutfitIndex);
 }
 
 function navigateDay(direction) {
-    const d = new Date(currentSelectedDateStr);
+    const d = new Date(currentSelectedDateStr + 'T00:00:00');
     d.setDate(d.getDate() + direction);
-    const newDateStr = d.toISOString().split('T')[0];
-
-    if (d.getMonth() !== currentCalendarDate.getMonth()) {
+    currentSelectedDateStr = d.toISOString().split('T')[0];
+    
+    if (d.getMonth() !== currentCalendarDate.getMonth() || d.getFullYear() !== currentCalendarDate.getFullYear()) {
         currentCalendarDate = new Date(d);
+        currentCalendarDate.setDate(1); // Safety for the 31st overflow
         updateCalendar();
+    } else {
+        updateCalendar(); 
     }
-
-    renderSidebar(newDateStr);
+    renderSidebar(currentSelectedDateStr);
 }
 
-function openScheduleModal(preselectedDate) {
+function openScheduleModal() {
     const select = document.getElementById('outfitSelect');
     select.innerHTML = lookbookOutfits.map(o => `<option value="${o.outfitID}">${o.outfitName}</option>`).join('');
     if (lookbookOutfits.length === 0) select.innerHTML = '<option disabled selected>Create an outfit first!</option>';
-    document.getElementById('datePicker').value = preselectedDate || new Date().toISOString().split('T')[0];
-    hideInlineError('scheduleError');
+    document.getElementById('datePicker').value = currentSelectedDateStr;
     document.getElementById('scheduleModal').style.display = 'flex';
 }
 
 function closeScheduleModal() {
     document.getElementById('scheduleModal').style.display = 'none';
-    hideInlineError('scheduleError');
 }
 
 async function confirmSchedule() {
     const outfitId = document.getElementById('outfitSelect').value;
     const date = document.getElementById('datePicker').value;
-    if (!outfitId || !date) { showInlineError('scheduleError', 'Please select both an outfit and a date.'); return; }
+    if (!outfitId || !date) return;
 
     try {
         const response = await fetch(await getApiUrl('/calendar'), {
@@ -267,54 +213,43 @@ async function confirmSchedule() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ date, outfitID: outfitId })
         });
-        if (!response.ok) {
-            const err = await response.json();
-            showInlineError('scheduleError', err.message || 'Failed to schedule outfit.'); return;
+        if (response.ok) {
+            await loadCalendarData();
+            closeScheduleModal();
         }
-        await loadCalendarData();
-        closeScheduleModal();
     } catch (err) {
-        showInlineError('scheduleError', 'Failed to schedule outfit. Please try again.');
-    }
-}
-
-async function removeSchedule(dateStr) {
-    if (!confirm('Remove all scheduled outfits for this day?')) return;
-    try {
-        const response = await fetch(await getApiUrl(`/calendar/${dateStr}`), { method: 'DELETE' });
-        if (!response.ok) throw new Error('Failed to remove schedule');
-        await loadCalendarData();
-    } catch (err) {
-        console.error('Error removing schedule:', err);
+        console.error(err);
     }
 }
 
 async function removeOutfitFromDay(dateStr, outfitId) {
-    if (!confirm('Remove this outfit from this day?')) return;
+    if (!confirm('Remove this outfit?')) return;
     try {
         const response = await fetch(await getApiUrl(`/calendar/${dateStr}?outfitId=${outfitId}`), { method: 'DELETE' });
-        if (!response.ok) throw new Error('Failed to remove outfit');
-        await loadCalendarData();
-        renderSidebar(dateStr);
+        if (response.ok) await loadCalendarData();
     } catch (err) {
-        console.error('Error removing outfit:', err);
+        console.error(err);
     }
 }
 
 function prevMonth() {
+    currentCalendarDate.setDate(1); 
     currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
     updateCalendar();
 }
 
 function nextMonth() {
+    currentCalendarDate.setDate(1); 
     currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
     updateCalendar();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     loadCalendarData();
-    const leftArrow = document.querySelector('.fa-chevron-left');
-    const rightArrow = document.querySelector('.fa-chevron-right');
-    if (leftArrow) leftArrow.onclick = prevMonth;
-    if (rightArrow) rightArrow.onclick = nextMonth;
+
+    const leftBtn = document.getElementById('prevMonthBtn') || document.querySelector('.fa-chevron-left');
+    const rightBtn = document.getElementById('nextMonthBtn') || document.querySelector('.fa-chevron-right');
+    
+    if (leftBtn) leftBtn.onclick = prevMonth;
+    if (rightBtn) rightBtn.onclick = nextMonth;
 });

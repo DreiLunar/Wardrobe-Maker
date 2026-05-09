@@ -51,15 +51,46 @@ async function resolveApiHost() {
     return resolvedApiHost;
 }
 
-async function getApiUrl(path) {
+let _apiBase = null;
+
+async function resolveApiBase() {
+    if (_apiBase !== null) return _apiBase;
+
+    // When served from file:, use the local host resolver (same behaviour as before)
     if (window.location.protocol === 'file:') {
         const host = await resolveApiHost();
-        return `${host}/api/wardrobe${path}`;
+        _apiBase = `${host}/api/wardrobe`;
+        return _apiBase;
     }
-    return `/api/wardrobe${path}`;
+
+    // When served over HTTP(S), probe likely prefixes once and cache result.
+    const candidates = ['/api/wardrobe', ''];
+    for (const prefix of candidates) {
+        try {
+            const probe = await fetch(`${prefix}/lookbook`, { method: 'GET', cache: 'no-store' });
+            if (probe.ok) {
+                _apiBase = prefix || '';
+                return _apiBase;
+            }
+        } catch (e) {
+            // try next
+        }
+    }
+
+    // Fallback to empty prefix
+    _apiBase = '';
+    return _apiBase;
 }
 
-function normalizeOutfit(outfit) {
+async function _getApiUrl(path) {
+    const base = await resolveApiBase();
+    // ensure path begins with '/'
+    const p = path.startsWith('/') ? path : '/' + path;
+    // if base is empty string, return p
+    return `${base}${p}`;
+}
+
+function _normalizeOutfit(outfit) {
     if (!outfit || typeof outfit !== 'object') return outfit;
     return {
         outfitID: outfit.outfitID ?? outfit.outfitId ?? outfit.OutfitID ?? outfit.id ?? '',
@@ -68,15 +99,15 @@ function normalizeOutfit(outfit) {
         bottom: outfit.bottom ?? outfit.Bottom ?? null,
         dress: outfit.dress ?? outfit.Dress ?? null,
         shoes: outfit.shoes ?? outfit.Shoes ?? null,
-        scheduledDate: outfit.scheduledDate ?? outfit.ScheduledDate ?? null,
+        scheduledDate: outfit.scheduledDate ?? outfit.ScheduledDate ?? outfit.date ?? outfit.Date ?? null,
         isReady: outfit.isReady ?? outfit.IsReady ?? false,
         date: outfit.date ?? outfit.Date ?? null
     };
 }
 
-function normalizeOutfits(outfits) {
+function _normalizeOutfits(outfits) {
     if (!Array.isArray(outfits)) return [];
-    return outfits.map(normalizeOutfit);
+    return outfits.map(_normalizeOutfit);
 }
 
 function ensureToastHost() {
@@ -89,7 +120,7 @@ function ensureToastHost() {
     return host;
 }
 
-function showToast(message, type = 'info') {
+function _showToast(message, type = 'info') {
     if (!message) return;
     const host = ensureToastHost();
     const toast = document.createElement('div');
@@ -103,14 +134,14 @@ function showToast(message, type = 'info') {
     }, 2200);
 }
 
-function openModal(modalElement) {
+function _openModal(modalElement) {
     if (!modalElement) return;
     modalElement.classList.remove('hidden');
     modalElement.style.display = 'flex';
     requestAnimationFrame(() => modalElement.classList.add('modal-open'));
 }
 
-function closeModal(modalElement) {
+function _closeModal(modalElement) {
     if (!modalElement) return;
     modalElement.classList.remove('modal-open');
     modalElement.classList.add('modal-closing');
@@ -121,7 +152,7 @@ function closeModal(modalElement) {
     }, 200);
 }
 
-async function withPending(button, work, pendingText = 'Working...') {
+async function _withPending(button, work, pendingText = 'Working...') {
     if (!button || button.dataset.pending === 'true') return;
     const originalText = button.innerHTML;
     button.dataset.pending = 'true';
@@ -139,13 +170,13 @@ async function withPending(button, work, pendingText = 'Working...') {
 }
 
 window.WardrobeCore = {
-    getApiUrl,
-    normalizeOutfit,
-    normalizeOutfits,
-    showToast,
-    openModal,
-    closeModal,
-    withPending
+    getApiUrl: _getApiUrl,
+    normalizeOutfit: _normalizeOutfit,
+    normalizeOutfits: _normalizeOutfits,
+    showToast: _showToast,
+    openModal: _openModal,
+    closeModal: _closeModal,
+    withPending: _withPending
 };
 
 (() => {

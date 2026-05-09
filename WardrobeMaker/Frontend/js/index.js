@@ -1,10 +1,12 @@
-const getApiUrl = async (path) => {
-    if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
-        return await window.WardrobeCore.getApiUrl(path);
-    }
-    // Fallback to default local path
-    return `/api/wardrobe${path}`;
-};
+if (typeof window.getApiUrl === 'undefined') {
+    window.getApiUrl = async function(path) {
+        if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
+            return await window.WardrobeCore.getApiUrl(path);
+        }
+        // Fallback to default local path
+        return `/api/wardrobe${path}`;
+    };
+}
 
 async function loadStats() {
     try {

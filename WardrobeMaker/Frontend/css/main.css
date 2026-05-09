@@ -76,6 +76,8 @@ body.page-transition.page-leaving {
     line-height: 1.25rem;
     white-space: nowrap;
     cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .nav-item:hover {

@@ -1,9 +1,11 @@
-const getApiUrl = async (path) => {
-    if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
-        return await window.WardrobeCore.getApiUrl(path);
-    }
-    return `/api/wardrobe${path}`;
-};
+if (typeof window.getApiUrl === 'undefined') {
+    window.getApiUrl = async function(path) {
+        if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
+            return await window.WardrobeCore.getApiUrl(path);
+        }
+        return `/api/wardrobe${path}`;
+    };
+}
 
 function showInlineError(elementId, message) {
     const el = document.getElementById(elementId);
@@ -52,8 +54,21 @@ const WardrobeApp = {
 
     openAnimatedModal(modal) {
         if (!modal) return;
+        modal.classList.remove('modal-closing');
         modal.classList.remove('hidden');
+        modal.classList.add('modal-open');
         modal.style.display = 'flex';
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+        const panel = modal.querySelector('.modal-panel');
+        if (panel) {
+            panel.classList.remove('hidden');
+            panel.classList.remove('opacity-0', 'scale-95');
+            panel.style.display = 'block';
+            panel.style.visibility = 'visible';
+            panel.style.opacity = '1';
+            panel.style.transform = 'translateY(0) scale(1)';
+        }
         requestAnimationFrame(() => modal.classList.add('modal-open'));
     },
 
@@ -61,10 +76,21 @@ const WardrobeApp = {
         if (!modal) return;
         modal.classList.remove('modal-open');
         modal.classList.add('modal-closing');
+        const panel = modal.querySelector('.modal-panel');
+        if (panel) {
+            panel.style.opacity = '';
+            panel.style.transform = '';
+            panel.style.visibility = '';
+        }
         setTimeout(() => {
             modal.classList.remove('modal-closing');
             modal.style.display = 'none';
             modal.classList.add('hidden');
+            modal.style.opacity = '';
+            modal.style.pointerEvents = '';
+            if (panel) {
+                panel.style.display = '';
+            }
         }, 200);
     },
 

@@ -12,6 +12,11 @@
     z-index: 10;
 }
 
+.hero-btns-container a {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
 .stat-card {
     min-height: 150px;
     display: flex;

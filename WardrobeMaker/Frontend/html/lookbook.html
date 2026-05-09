@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/lookbook.css"> 
 </head>
-<body class="bg-[#f9f7f4] pb-20">
+<body class="page-transition bg-[#f9f7f4] pb-20">
 
     <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#e6e0d5]">
         <div class="flex items-center mb-3 md:mb-0">
@@ -66,7 +66,7 @@
         </div>
 
         <div id="lookbookControls" class="hidden flex justify-end mb-6">
-            <button onclick="LookbookApp.clearAll()" class="text-xs font-bold text-red-400 hover:text-red-600 transition flex items-center gap-2">
+            <button onclick="LookbookApp.clearAll(this)" class="text-xs font-bold text-red-400 hover:text-red-600 transition flex items-center gap-2">
                 <i class="fas fa-trash-can"></i> Clear All Looks
             </button>
         </div>
@@ -87,6 +87,7 @@
         </div>
     </main>
 
+    <script src="../js/main.js"></script>
     <script src="../js/lookbook.js"></script>
 </body>
 </html>

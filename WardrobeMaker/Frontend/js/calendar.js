@@ -1,38 +1,58 @@
-const LOCAL_API_HOSTS = [
-    'http://localhost:5000',
-    'http://localhost:7182',
-    'https://localhost:7182'
-];
-let resolvedApiHost = '';
-
-async function resolveApiHost() {
-    if (resolvedApiHost) return resolvedApiHost;
-    for (const host of LOCAL_API_HOSTS) {
-        try {
-            const response = await fetch(`${host}/api/wardrobe/stats`, { method: 'GET', mode: 'cors' });
-            if (response.ok) {
-                resolvedApiHost = host;
-                return resolvedApiHost;
-            }
-        } catch {}
-    }
-    resolvedApiHost = LOCAL_API_HOSTS[0];
-    return resolvedApiHost;
-}
-
-async function getApiUrl(path) {
-    if (window.location.protocol === 'file:') {
-        const host = await resolveApiHost();
-        return `${host}/api/wardrobe${path}`;
-    }
-    return `/api/wardrobe${path}`;
-}
+const { getApiUrl, normalizeOutfits, showToast, openModal, closeModal, withPending } = window.WardrobeCore;
 
 let currentCalendarDate = new Date();
 let scheduledOutfits = [];
 let lookbookOutfits = [];
-let currentSelectedDateStr = new Date().toISOString().split('T')[0];
+let currentSelectedDateStr = formatDateLocal(new Date());
 let currentOutfitIndex = 0;
+
+function formatDateLocal(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function isMobileCalendarView() {
+    return window.matchMedia('(max-width: 1023px)').matches || window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+}
+
+function scrollToScheduledOutfits() {
+    const sidebar = document.getElementById('calendarSidebar') || document.getElementById('sidebarContent');
+    if (!sidebar) return;
+    requestAnimationFrame(() => {
+        sidebar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+}
+
+function animateSelectedCalendarDay() {
+    const selectedCell = document.querySelector(`.cal-day-box[data-date="${currentSelectedDateStr}"]`);
+    if (!selectedCell) return;
+    selectedCell.classList.remove('day-select-pulse');
+    void selectedCell.offsetWidth;
+    selectedCell.classList.add('day-select-pulse');
+}
+
+function animateFadeIn(element) {
+    if (!element) return;
+    element.classList.remove('ui-fade-in');
+    void element.offsetWidth;
+    element.classList.add('ui-fade-in');
+}
+
+function renderCalendarLoading() {
+    const grid = document.getElementById('calendarGrid');
+    const sidebarContent = document.getElementById('sidebarContent');
+    if (grid) {
+        grid.innerHTML = Array.from({ length: 35 }, () =>
+            '<div class="calendar-skeleton-cell skeleton-shimmer"></div>'
+        ).join('');
+    }
+    if (sidebarContent) {
+        sidebarContent.innerHTML = `
+            <div class="sidebar-skeleton-line skeleton-shimmer"></div>
+            <div class="sidebar-skeleton-line skeleton-shimmer"></div>
+            <div class="sidebar-skeleton-card skeleton-shimmer"></div>
+        `;
+    }
+}
 
 function showInlineError(elementId, message) {
     let el = document.getElementById(elementId);
@@ -53,18 +73,36 @@ function hideInlineError(elementId) {
 }
 
 async function loadCalendarData() {
+    renderCalendarLoading();
     try {
         const [calendarRes, lookbookRes] = await Promise.all([
             fetch(await getApiUrl('/calendar')),
             fetch(await getApiUrl('/lookbook'))
         ]);
-        if (calendarRes.ok) scheduledOutfits = await calendarRes.json();
-        if (lookbookRes.ok) lookbookOutfits = await lookbookRes.json();
+        if (calendarRes.ok) scheduledOutfits = normalizeOutfits(await calendarRes.json());
+        if (lookbookRes.ok) lookbookOutfits = normalizeOutfits(await lookbookRes.json());
 
         updateCalendar();
         renderSidebar(currentSelectedDateStr);
     } catch (err) {
         console.error('Error loading calendar data:', err);
+        showToast('Failed to load calendar data.', 'error');
+    }
+}
+
+function updateSelectedCalendarDate(selectedDate) {
+    const grid = document.getElementById('calendarGrid');
+    if (!grid) return;
+    const previous = grid.querySelector('.cal-day-box[data-selected="true"]');
+    if (previous) {
+        previous.classList.remove('border-[#8c7862]', 'border-2');
+        previous.removeAttribute('data-selected');
+    }
+
+    const next = grid.querySelector(`.cal-day-box[data-date="${selectedDate}"]`);
+    if (next) {
+        next.classList.add('border-[#8c7862]', 'border-2');
+        next.setAttribute('data-selected', 'true');
     }
 }
 
@@ -79,7 +117,7 @@ function updateCalendar() {
 
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = formatDateLocal(new Date());
 
     for (let i = 0; i < firstDay; i++) {
         const emptyDiv = document.createElement('div');
@@ -92,8 +130,12 @@ function updateCalendar() {
         const dateString = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
 
         dayDiv.classList.add('cal-day-box');
+        dayDiv.dataset.date = dateString;
         if (dateString === todayStr) dayDiv.classList.add('active');
-        if (dateString === currentSelectedDateStr) dayDiv.classList.add('border-[#8c7862]', 'border-2');
+        if (dateString === currentSelectedDateStr) {
+            dayDiv.classList.add('border-[#8c7862]', 'border-2');
+            dayDiv.setAttribute('data-selected', 'true');
+        }
 
         let cellHtml = `<span class="day-number">${i}</span>`;
 
@@ -117,8 +159,14 @@ function updateCalendar() {
         dayDiv.innerHTML = cellHtml;
         dayDiv.onclick = () => {
             currentSelectedDateStr = dateString;
-            updateCalendar(); // Refresh grid to show new border
+            updateSelectedCalendarDate(dateString);
+            if (isMobileCalendarView()) {
+                animateSelectedCalendarDay();
+            }
             renderSidebar(dateString);
+            if (isMobileCalendarView()) {
+                scrollToScheduledOutfits();
+            }
         };
         grid.appendChild(dayDiv);
     }
@@ -143,6 +191,7 @@ function renderSidebar(dateStr) {
                 <p class="text-gray-400 text-sm">No looks planned for this day.</p>
             </div>`;
     }
+    animateFadeIn(contentArea);
 }
 
 function renderOutfitCard(contentArea, dayOutfits, index) {
@@ -164,7 +213,7 @@ function renderOutfitCard(contentArea, dayOutfits, index) {
             ${dayOutfits.length > 1 ? `<button onclick="changeOutfit(1)" class="arrow-button arrow-right"><i class="fas fa-chevron-right"></i></button>` : ''}
         </div>
         <h3 class="text-xl font-bold text-[var(--text-main)] mb-2 mt-6">${outfit.outfitName}</h3>
-        <button onclick="removeOutfitFromDay('${currentSelectedDateStr}', '${outfit.outfitID}')" class="w-full text-red-400 hover:text-red-600 text-sm font-bold transition py-2">
+        <button onclick="removeOutfitFromDay(event, this, '${currentSelectedDateStr}', '${outfit.outfitID}')" class="w-full text-red-400 hover:text-red-600 text-sm font-bold transition py-2">
             <i class="fas fa-trash-alt"></i> Remove This Look
         </button>`;
 }
@@ -178,7 +227,7 @@ function changeOutfit(direction) {
 function navigateDay(direction) {
     const d = new Date(currentSelectedDateStr + 'T00:00:00');
     d.setDate(d.getDate() + direction);
-    currentSelectedDateStr = d.toISOString().split('T')[0];
+    currentSelectedDateStr = formatDateLocal(d);
     
     if (d.getMonth() !== currentCalendarDate.getMonth() || d.getFullYear() !== currentCalendarDate.getFullYear()) {
         currentCalendarDate = new Date(d);
@@ -195,14 +244,15 @@ function openScheduleModal() {
     select.innerHTML = lookbookOutfits.map(o => `<option value="${o.outfitID}">${o.outfitName}</option>`).join('');
     if (lookbookOutfits.length === 0) select.innerHTML = '<option disabled selected>Create an outfit first!</option>';
     document.getElementById('datePicker').value = currentSelectedDateStr;
-    document.getElementById('scheduleModal').style.display = 'flex';
+    openModal(document.getElementById('scheduleModal'));
 }
 
 function closeScheduleModal() {
-    document.getElementById('scheduleModal').style.display = 'none';
+    closeModal(document.getElementById('scheduleModal'));
 }
 
-async function confirmSchedule() {
+async function confirmSchedule(buttonElement) {
+    await withPending(buttonElement, async () => {
     const outfitId = document.getElementById('outfitSelect').value;
     const date = document.getElementById('datePicker').value;
     if (!outfitId || !date) return;
@@ -214,21 +264,47 @@ async function confirmSchedule() {
             body: JSON.stringify({ date, outfitID: outfitId })
         });
         if (response.ok) {
-            await loadCalendarData();
+            const selectedOutfit = lookbookOutfits.find(o => o.outfitID === outfitId);
+            if (selectedOutfit && !scheduledOutfits.some(s => s.date === date && s.outfitID === outfitId)) {
+                scheduledOutfits.push({ ...selectedOutfit, date });
+                if (currentCalendarDate.getFullYear() === new Date(date + 'T00:00:00').getFullYear() &&
+                    currentCalendarDate.getMonth() === new Date(date + 'T00:00:00').getMonth()) {
+                    updateCalendar();
+                }
+                if (currentSelectedDateStr === date) {
+                    renderSidebar(date);
+                }
+            }
             closeScheduleModal();
+            showToast('Outfit scheduled.', 'success');
+            loadCalendarData();
         }
     } catch (err) {
         console.error(err);
+        showToast('Failed to schedule outfit.', 'error');
     }
+    }, 'Saving...');
 }
 
-async function removeOutfitFromDay(dateStr, outfitId) {
+async function removeOutfitFromDay(event, sourceEl, dateStr, outfitId) {
+    event.preventDefault();
+    event.stopPropagation();
     if (!confirm('Remove this outfit?')) return;
     try {
         const response = await fetch(await getApiUrl(`/calendar/${dateStr}?outfitId=${outfitId}`), { method: 'DELETE' });
-        if (response.ok) await loadCalendarData();
+        if (response.ok) {
+            const contentArea = document.getElementById('sidebarContent');
+            const animatedTarget = sourceEl?.closest?.('.outfit-display-with-arrows')?.parentElement || contentArea;
+            if (animatedTarget) {
+                animatedTarget.classList.add('deleting-exit');
+                await new Promise(resolve => setTimeout(resolve, 260));
+            }
+            await loadCalendarData();
+            showToast('Scheduled look removed.', 'success');
+        }
     } catch (err) {
         console.error(err);
+        showToast('Failed to remove schedule.', 'error');
     }
 }
 

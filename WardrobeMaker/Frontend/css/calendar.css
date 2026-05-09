@@ -17,6 +17,16 @@
     transform: translateY(-2px);
 }
 
+.cal-day-box.day-select-pulse {
+    animation: daySelectPulse 280ms ease;
+}
+
+@keyframes daySelectPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.96); }
+    100% { transform: scale(1); }
+}
+
 .cal-day-box.active {
     border-color: var(--earth-brown);
     background: #ffffff;
@@ -197,4 +207,22 @@
 @keyframes cardPop {
     from { transform: scale(0.8); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
+}
+
+.calendar-skeleton-cell {
+    min-height: 100px;
+    border-radius: 1.5rem;
+}
+
+.sidebar-skeleton-line {
+    width: 85%;
+    height: 14px;
+    border-radius: 9999px;
+    margin-bottom: 12px;
+}
+
+.sidebar-skeleton-card {
+    width: 100%;
+    height: 180px;
+    border-radius: 1rem;
 }

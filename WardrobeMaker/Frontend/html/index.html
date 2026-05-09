@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/index.css" />
 </head>
-<body class="bg-[#f9f7f4] min-h-screen pb-12">
+<body class="page-transition bg-[#f9f7f4] min-h-screen pb-12">
 
     <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#e6e0d5]">
         <div class="flex items-center mb-3 md:mb-0">
@@ -54,69 +54,35 @@
         </div>
 
         <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-12 text-center">
-            <div class="stat-card bg-[#8c7862] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="location.href='wardrobe.html'">
+            <div class="stat-card bg-[#8c7862] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="navigateWithTransition('wardrobe.html')">
                 <div class="text-2xl font-bold" id="total-items">0</div>
                 <div class="text-[8px] md:text-[9px] uppercase tracking-[0.1em] opacity-80">Total Items</div>
             </div>
             
-            <div class="stat-card bg-[#a69685] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="location.href='wardrobe.html'">
+            <div class="stat-card bg-[#a69685] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="navigateWithTransition('wardrobe.html')">
                 <div class="text-2xl font-bold" id="clean-items">0</div>
                 <div class="text-[8px] md:text-[9px] uppercase tracking-[0.1em] opacity-80">Clean Items</div>
             </div>
 
-            <div class="stat-card bg-[#bdae9e] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="location.href='wardrobe.html'">
+            <div class="stat-card bg-[#bdae9e] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="navigateWithTransition('wardrobe.html')">
                 <div class="text-2xl font-bold" id="in-laundry">0</div>
                 <div class="text-[8px] md:text-[9px] uppercase tracking-[0.15em] opacity-80">In Laundry</div>
             </div>
 
-            <div class="stat-card bg-[#8c7862] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="location.href='lookbook.html'">
+            <div class="stat-card bg-[#8c7862] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="navigateWithTransition('lookbook.html')">
                 <div class="text-2xl font-bold" id="saved-outfits">0</div>
                 <div class="text-[8px] md:text-[9px] uppercase tracking-[0.1em] opacity-80">Saved Outfits</div>
             </div>
 
-            <div class="stat-card bg-[#a69685] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="location.href='calendar.html'">
+            <div class="stat-card bg-[#a69685] text-white py-5 px-2 rounded-[2rem] shadow-sm hover:shadow-md transition-all cursor-pointer" onclick="navigateWithTransition('calendar.html')">
                 <div class="text-2xl font-bold" id="scheduled">0</div>
                 <div class="text-[8px] md:text-[9px] uppercase tracking-[0.1em] opacity-80">Scheduled</div>
             </div>
         </div>
 
-        <div class="flex items-center gap-3 mb-8">
-            <div class="w-1.5 h-8 bg-[#8c7862] rounded-full"></div>
-            <h2 class="text-2xl font-bold text-[#1a2b3c]">Quick Actions</h2>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <a href="wardrobe.html" class="action-card group p-8 bg-white rounded-[2rem] border border-[#e6e0d5] flex flex-col items-start transition-all hover:shadow-xl">
-                <div class="w-12 h-12 bg-[#f4f1ee] rounded-2xl flex items-center justify-center text-[#8c7862] mb-4 group-hover:bg-[#8c7862] group-hover:text-white transition-colors">
-                    <i class="fas fa-plus"></i>
-                </div>
-                <h3 class="font-bold text-lg">Add Clothing</h3>
-                <p class="text-sm text-gray-400 mt-2 leading-relaxed">Upload new items and manage your digital closet.</p>
-            </a>
-            <a href="create.html" class="action-card group p-8 bg-white rounded-[2rem] border border-[#e6e0d5] flex flex-col items-start transition-all hover:shadow-xl">
-                <div class="w-12 h-12 bg-[#f4f1ee] rounded-2xl flex items-center justify-center text-[#8c7862] mb-4 group-hover:bg-[#8c7862] group-hover:text-white transition-colors">
-                    <i class="fas fa-wand-magic-sparkles"></i>
-                </div>
-                <h3 class="font-bold text-lg">Create Outfit</h3>
-                <p class="text-sm text-gray-400 mt-2 leading-relaxed">Mix and match to find your next favorite look.</p>
-            </a>
-            <a href="calendar.html" class="action-card group p-8 bg-white rounded-[2rem] border border-[#e6e0d5] flex flex-col items-start transition-all hover:shadow-xl">
-                <div class="w-12 h-12 bg-[#f4f1ee] rounded-2xl flex items-center justify-center text-[#8c7862] mb-4 group-hover:bg-[#8c7862] group-hover:text-white transition-colors">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <h3 class="font-bold text-lg">Plan Week</h3>
-                <p class="text-sm text-gray-400 mt-2 leading-relaxed">Schedule your looks and stay prepared.</p>
-            </a>
-            <a href="lookbook.html" class="action-card group p-8 bg-white rounded-[2rem] border border-[#e6e0d5] flex flex-col items-start transition-all hover:shadow-xl">
-                <div class="w-12 h-12 bg-[#f4f1ee] rounded-2xl flex items-center justify-center text-[#8c7862] mb-4 group-hover:bg-[#8c7862] group-hover:text-white transition-colors">
-                    <i class="fas fa-image"></i>
-                </div>
-                <h3 class="font-bold text-lg">Lookbook</h3>
-                <p class="text-sm text-gray-400 mt-2 leading-relaxed">Browse your collection of saved combinations.</p>
-            </a>
-        </div>
     </main>
 
+    <script src="../js/main.js"></script>
     <script src="../js/index.js"></script>
 </body>
 </html>

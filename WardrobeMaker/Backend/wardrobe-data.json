@@ -100,18 +100,6 @@
       "length": ""
     },
     {
-      "itemID": "FOO-1778051691750",
-      "name": "Leather Shoes",
-      "primaryColor": "Brown",
-      "tags": [
-        "Formal"
-      ],
-      "imageFilePath": "http://localhost:5000/uploads/77294e47-c2dd-4a91-a4e4-da0c17e35fc6.jpg",
-      "isClean": true,
-      "type": "Footwear",
-      "length": ""
-    },
-    {
       "itemID": "DRE-1778210083373",
       "name": "Sundress",
       "primaryColor": "White",
@@ -154,54 +142,54 @@
   ],
   "lookbook": [
     {
-      "outfitID": "OFT-1778051714508",
-      "outfitName": "Casual-Formal",
-      "topID": "TOP-1778051422723",
-      "bottomID": "BOT-1778051580837",
-      "dressID": null,
-      "shoesID": "FOO-1778051691750",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778051749814",
-      "outfitName": "Casual Monday",
-      "topID": "TOP-1778051366421",
-      "bottomID": "BOT-1778051580837",
-      "dressID": null,
-      "shoesID": "FOO-1778051643759",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778051761192",
-      "outfitName": "Casual Monday(black)",
-      "topID": "TOP-1778051422723",
-      "bottomID": "BOT-1778051580837",
-      "dressID": null,
-      "shoesID": "FOO-1778051643759",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778051768986",
-      "outfitName": "Dog",
+      "outfitID": "OFT-1778339861787",
+      "outfitName": "Curated Look",
       "topID": "TOP-1778048469663",
+      "bottomID": "BOT-1778051537823",
+      "dressID": null,
+      "shoesID": "FOO-1778051643759",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778339954485",
+      "outfitName": "Curated Look #2",
+      "topID": "TOP-1778221832235",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051643759",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778339957862",
+      "outfitName": "Curated Look #3",
+      "topID": "TOP-1778221953598",
       "bottomID": "BOT-1778051580837",
       "dressID": null,
       "shoesID": "FOO-1778051659733",
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778210098490",
-      "outfitName": "Summer",
-      "topID": null,
-      "bottomID": null,
-      "dressID": "DRE-1778210083373",
+      "outfitID": "OFT-1778339961111",
+      "outfitName": "Curated Look #4",
+      "topID": "TOP-1778221953598",
+      "bottomID": "BOT-1778051537823",
+      "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778339964075",
+      "outfitName": "Curated Look #5",
+      "topID": "TOP-1778048469663",
+      "bottomID": "BOT-1778051559490",
+      "dressID": null,
       "shoesID": "FOO-1778051643759",
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778228513693",
-      "outfitName": "Cool",
-      "topID": "TOP-1778221832235",
+      "outfitID": "OFT-1778339967037",
+      "outfitName": "Curated Look #6",
+      "topID": "TOP-1778221953598",
       "bottomID": "BOT-1778222063215",
       "dressID": null,
       "shoesID": "FOO-1778051659733",
@@ -209,24 +197,11 @@
     }
   ],
   "schedules": {
-    "2026-05-06": [
-      "OFT-1778051714508",
-      "OFT-1778051761192",
-      "OFT-1778051768986"
-    ],
-    "2026-05-07": [
-      "OFT-1778051768986"
-    ],
-    "2026-05-08": [
-      "OFT-1778051714508",
-      "OFT-1778051749814",
-      "OFT-1778228513693"
-    ],
     "2026-05-09": [
-      "OFT-1778228513693"
-    ],
-    "2026-06-01": [
-      "OFT-1778051714508"
+      "OFT-1778339861787",
+      "OFT-1778339954485",
+      "OFT-1778339957862",
+      "OFT-1778339961111"
     ]
   }
 }

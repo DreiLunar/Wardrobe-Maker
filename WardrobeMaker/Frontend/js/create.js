@@ -1,36 +1,4 @@
-const LOCAL_API_HOSTS = [
-    'http://localhost:5000',
-    'http://localhost:7182',
-    'https://localhost:7182'
-];
-let resolvedApiHost = '';
-
-async function resolveApiHost() {
-    if (resolvedApiHost) return resolvedApiHost;
-
-    for (const host of LOCAL_API_HOSTS) {
-        try {
-            const response = await fetch(`${host}/api/wardrobe/stats`, { method: 'GET', mode: 'cors' });
-            if (response.ok) {
-                resolvedApiHost = host;
-                return resolvedApiHost;
-            }
-        } catch {
-            // Try next host
-        }
-    }
-
-    resolvedApiHost = LOCAL_API_HOSTS[0];
-    return resolvedApiHost;
-}
-
-async function getApiUrl(path) {
-    if (window.location.protocol === 'file:') {
-        const host = await resolveApiHost();
-        return `${host}/api/wardrobe${path}`;
-    }
-    return `/api/wardrobe${path}`;
-}
+const { getApiUrl, normalizeOutfits, showToast, openModal, closeModal, withPending } = window.WardrobeCore;
 
 let inventoryItems = [];
 let selectedSlots = { top: null, bottom: null, dress: null, footwear: null };
@@ -42,7 +10,7 @@ function showInlineError(elementId, message) {
         el = document.createElement('div');
         el.id = elementId;
         el.className = 'text-red-500 text-sm hidden mb-2';
-        const saveBtn = document.querySelector('button[onclick="saveOutfit()"]');
+        const saveBtn = document.querySelector('button[onclick^="saveOutfit("]');
         if (saveBtn) saveBtn.parentNode.insertBefore(el, saveBtn);
     }
     el.textContent = message;
@@ -197,6 +165,74 @@ function pickRandomItem(items) {
     return items[Math.floor(Math.random() * items.length)];
 }
 
+function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+async function generateDefaultOutfitName() {
+    const baseName = currentMode === 'dress' ? 'Dress Ensemble' : 'Curated Look';
+
+    try {
+        const response = await fetch(await getApiUrl('/lookbook'), { cache: 'no-store' });
+        if (!response.ok) throw new Error('Failed to load lookbook names');
+
+        const outfits = normalizeOutfits(await response.json());
+        const namePattern = new RegExp(`^${escapeRegExp(baseName)}(?: #(\\d+))?$`, 'i');
+        let highestIndex = 0;
+
+        outfits.forEach((outfit) => {
+            const existingName = String(outfit?.outfitName ?? outfit?.OutfitName ?? '').trim();
+            const match = existingName.match(namePattern);
+            if (!match) return;
+            const parsed = match[1] ? Number.parseInt(match[1], 10) : 1;
+            if (!Number.isNaN(parsed) && parsed > highestIndex) {
+                highestIndex = parsed;
+            }
+        });
+
+        return highestIndex === 0 ? baseName : `${baseName} #${highestIndex + 1}`;
+    } catch {
+        return `${baseName} #${new Date().getTime().toString().slice(-4)}`;
+    }
+}
+
+async function hasDuplicateOutfitSelection() {
+    const response = await fetch(await getApiUrl('/lookbook'), { cache: 'no-store' });
+    if (!response.ok) return false;
+
+    const outfits = normalizeOutfits(await response.json());
+
+    const getId = (obj, ...possibleKeys) => {
+        if (!obj) return null;
+        for (const k of possibleKeys) {
+            if (obj[k]) return obj[k];
+        }
+        // If obj is a string id
+        if (typeof obj === 'string') return obj;
+        return null;
+    };
+
+    return outfits.some((outfit) => {
+        const outfitTopId = getId(outfit.top, 'itemID', 'id') ?? getId(outfit, 'topID', 'TopID', 'topId');
+        const outfitBottomId = getId(outfit.bottom, 'itemID', 'id') ?? getId(outfit, 'bottomID', 'BottomID', 'bottomId');
+        const outfitDressId = getId(outfit.dress, 'itemID', 'id') ?? getId(outfit, 'dressID', 'DressID', 'dressId');
+        const outfitShoesId = getId(outfit.shoes, 'itemID', 'id') ?? getId(outfit, 'shoesID', 'ShoesID', 'shoesId', 'shoes');
+
+        const selectedTopId = selectedSlots.top?.itemID ?? selectedSlots.top?.id ?? null;
+        const selectedBottomId = selectedSlots.bottom?.itemID ?? selectedSlots.bottom?.id ?? null;
+        const selectedDressId = selectedSlots.dress?.itemID ?? selectedSlots.dress?.id ?? null;
+        const selectedShoesId = selectedSlots.footwear?.itemID ?? selectedSlots.footwear?.id ?? null;
+
+        if (currentMode === 'dress') {
+            return outfitDressId && selectedDressId && outfitDressId === selectedDressId && outfitShoesId && selectedShoesId && outfitShoesId === selectedShoesId;
+        }
+
+        return outfitTopId && selectedTopId && outfitTopId === selectedTopId &&
+               outfitBottomId && selectedBottomId && outfitBottomId === selectedBottomId &&
+               outfitShoesId && selectedShoesId && outfitShoesId === selectedShoesId;
+    });
+}
+
 async function randomizeOutfit() {
     hideInlineError('saveError');
     const activeMode = getActiveOutfitMode();
@@ -230,8 +266,10 @@ async function randomizeOutfit() {
     selectItem('footwear', pickRandomItem(cleanFootwear).itemID);
 }
 
-async function saveOutfit() {
-    const name = document.getElementById('outfitName').value.trim();
+async function saveOutfit(buttonElement) {
+    await withPending(buttonElement, async () => {
+    const outfitNameInput = document.getElementById('outfitName');
+    let name = outfitNameInput?.value.trim() ?? '';
     hideInlineError('saveError');
 
     if (currentMode === 'standard') {
@@ -244,7 +282,15 @@ async function saveOutfit() {
         }
     }
     
-    if (!name) { showInlineError('saveError', 'Please name your outfit.'); return; }
+    if (!name) {
+        name = await generateDefaultOutfitName();
+        if (outfitNameInput) outfitNameInput.value = name;
+    }
+
+    if (await hasDuplicateOutfitSelection()) {
+        showInlineError('saveError', 'This exact outfit is already in your lookbook.');
+        return;
+    }
 
     const outfitId = `OFT-${Date.now()}`;
     
@@ -299,14 +345,17 @@ async function saveOutfit() {
         }
         
         document.getElementById('flashcardTitle').innerText = name;
-        document.getElementById('flashcardOverlay').style.display = 'flex';
+        openModal(document.getElementById('flashcardOverlay'));
+        showToast('Outfit saved to lookbook.', 'success');
     } catch (err) {
         showInlineError('saveError', 'Failed to save outfit. Please try again.');
+        showToast('Failed to save outfit.', 'error');
     }
+    }, 'Saving...');
 }
 
 function closeFlashcard() {
-    document.getElementById('flashcardOverlay').style.display = 'none';
+    closeModal(document.getElementById('flashcardOverlay'));
     document.getElementById('outfitName').value = '';
     clearAllSlots();
     hideInlineError('saveError');

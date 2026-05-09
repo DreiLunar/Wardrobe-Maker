@@ -22,6 +22,22 @@
     box-shadow: 0 10px 15px rgba(0,0,0,0.05);
 }
 
+.outfit-card.removing {
+    pointer-events: none;
+    animation: outfit-card-exit 260ms ease forwards;
+}
+
+@keyframes outfit-card-exit {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.92) translateY(-8px);
+    }
+}
+
 .delete-btn {
     position: absolute;
     top: 15px;

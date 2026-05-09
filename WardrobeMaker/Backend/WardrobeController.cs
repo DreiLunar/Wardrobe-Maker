@@ -218,6 +218,8 @@ namespace WardrobeMaker
                     return BadRequest(new { message = "Dress or shoes not found." });
 
                 var outfit = new Outfit(request.OutfitID, request.OutfitName, dress, shoes);
+                if (_manager.HasDuplicateOutfit(outfit))
+                    return Conflict(new { message = "This exact outfit is already in your lookbook." });
                 _manager.AddOutfit(outfit);
 
                 return Ok(new { message = $"{outfit.OutfitName} saved to lookbook." });
@@ -233,6 +235,8 @@ namespace WardrobeMaker
                     return BadRequest(new { message = "One or more items not found." });
 
                 var outfit = new Outfit(request.OutfitID, request.OutfitName, top, bottom, shoes);
+                if (_manager.HasDuplicateOutfit(outfit))
+                    return Conflict(new { message = "This exact outfit is already in your lookbook." });
                 _manager.AddOutfit(outfit);
 
                 return Ok(new { message = $"{outfit.OutfitName} saved to lookbook." });
@@ -375,7 +379,7 @@ namespace WardrobeMaker
 
         // DELETE /api/wardrobe/calendar/{date}
         [HttpDelete("calendar/{date}")]
-        public IActionResult RemoveSchedule(string date, [FromQuery] string outfitId = null)
+        public IActionResult RemoveSchedule(string date, [FromQuery] string? outfitId = null)
         {
             if (!_manager.Schedules.ContainsKey(date))
                 return NotFound(new { message = "No schedule found for this date." });

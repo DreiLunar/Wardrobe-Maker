@@ -41,7 +41,8 @@ namespace WardrobeMaker
             //Standard outfit: Top + Bottom + Shoes
             if (SelectedDress == null)
             {
-                return SelectedTop.IsClean && SelectedBottom.IsClean && SelectedShoes.IsClean;
+                return SelectedTop != null && SelectedBottom != null &&
+                       SelectedTop.IsClean && SelectedBottom.IsClean && SelectedShoes.IsClean;
             }
             //Dress outfit: Dress + Shoes
             return SelectedDress.IsClean && SelectedShoes.IsClean;

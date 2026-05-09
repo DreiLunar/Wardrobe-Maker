@@ -1,32 +1,9 @@
-const LOCAL_API_HOSTS = [
-    'http://localhost:5000',
-    'http://localhost:7182',
-    'https://localhost:7182'
-];
-let resolvedApiHost = '';
-
-async function resolveApiHost() {
-    if (resolvedApiHost) return resolvedApiHost;
-    for (const host of LOCAL_API_HOSTS) {
-        try {
-            const statsResponse = await fetch(`${host}/api/wardrobe/stats`, { method: 'GET', mode: 'cors' });
-            if (statsResponse.ok) {
-                resolvedApiHost = host;
-                return resolvedApiHost;
-            }
-        } catch { /* try next host */ }
-    }
-    resolvedApiHost = LOCAL_API_HOSTS[0];
-    return resolvedApiHost;
-}
-
-async function getApiUrl(path) {
-    if (window.location.protocol === 'file:') {
-        const host = await resolveApiHost();
-        return `${host}/api/wardrobe${path}`;
+const getApiUrl = async (path) => {
+    if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
+        return await window.WardrobeCore.getApiUrl(path);
     }
     return `/api/wardrobe${path}`;
-}
+};
 
 function showInlineError(elementId, message) {
     const el = document.getElementById(elementId);
@@ -51,7 +28,48 @@ const WardrobeApp = {
         }
     },
 
+    renderLoading() {
+        const gridIds = ['topsGrid', 'bottomsGrid', 'dressesGrid', 'footwearGrid'];
+        gridIds.forEach((id) => {
+            const grid = document.getElementById(id);
+            if (!grid) return;
+            grid.innerHTML = Array.from({ length: 2 }, () => `
+                <div class="bg-white p-4 rounded-[2rem] border border-[#e6e0d5]">
+                    <div class="w-full h-48 rounded-[1.5rem] skeleton-shimmer mb-4"></div>
+                    <div class="h-4 w-2/3 rounded-full skeleton-shimmer mb-2"></div>
+                    <div class="h-3 w-1/2 rounded-full skeleton-shimmer"></div>
+                </div>
+            `).join('');
+        });
+    },
+
+    animateFadeIn(element) {
+        if (!element) return;
+        element.classList.remove('ui-fade-in');
+        void element.offsetWidth;
+        element.classList.add('ui-fade-in');
+    },
+
+    openAnimatedModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
+        requestAnimationFrame(() => modal.classList.add('modal-open'));
+    },
+
+    closeAnimatedModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('modal-open');
+        modal.classList.add('modal-closing');
+        setTimeout(() => {
+            modal.classList.remove('modal-closing');
+            modal.style.display = 'none';
+            modal.classList.add('hidden');
+        }, 200);
+    },
+
     async loadItems() {
+        this.renderLoading();
         try {
             const response = await fetch(await getApiUrl('/inventory'));
             if (!response.ok) throw new Error('Failed to load inventory');
@@ -64,13 +82,13 @@ const WardrobeApp = {
 
     openModal() {
         const modal = document.getElementById('addItemModal');
-        if (modal) modal.style.display = 'flex';
+        this.openAnimatedModal(modal);
         this.resetModal();
     },
 
     closeModal() {
         const modal = document.getElementById('addItemModal');
-        if (modal) modal.style.display = 'none';
+        this.closeAnimatedModal(modal);
         this.resetModal();
     },
 
@@ -184,11 +202,23 @@ const WardrobeApp = {
         } catch (err) { console.error(err); }
     },
 
-    async deleteItem(itemId) {
+    async deleteItem(eventOrItemId, maybeItemId) {
+        const eventObj = typeof eventOrItemId === 'string' ? null : eventOrItemId;
+        const sourceEl = eventObj?.currentTarget ?? null;
+        const itemId = typeof eventOrItemId === 'string' ? eventOrItemId : maybeItemId;
+        if (eventObj) {
+            eventObj.preventDefault();
+            eventObj.stopPropagation();
+        }
         if (!confirm('Delete this item?')) return;
         try {
             const response = await fetch(await getApiUrl(`/inventory/${itemId}`), { method: 'DELETE' });
             if (response.ok) {
+                const cardElement = sourceEl?.closest?.('.wardrobe-item-card');
+                if (cardElement) {
+                    cardElement.classList.add('deleting-exit');
+                    await new Promise(resolve => setTimeout(resolve, 260));
+                }
                 this.items = this.items.filter(i => i.itemID !== itemId);
                 this.render(document.getElementById('catFilter')?.value || 'All');
             }
@@ -243,6 +273,7 @@ const WardrobeApp = {
             } else {
                 grid.innerHTML = items.map(item => this.renderItemCard(item)).join('');
             }
+            this.animateFadeIn(grid);
         });
 
         const totalCountEl = document.getElementById('itemCount');
@@ -260,12 +291,12 @@ const WardrobeApp = {
             : `<span class="text-[10px] bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-bold uppercase">In Laundry</span>`;
 
         return `
-            <div class="bg-white p-4 rounded-[2rem] shadow-sm border border-[#e6e0d5] hover:shadow-md transition group">
+            <div class="wardrobe-item-card bg-white p-4 rounded-[2rem] shadow-sm border border-[#e6e0d5] hover:shadow-md transition group">
                 ${img}
                 <div class="px-2 pb-2">
                     <div class="flex justify-between items-start mb-2">
                         <h4 class="font-bold text-gray-800">${item.name}</h4>
-                        <button onclick="WardrobeApp.deleteItem('${item.itemID}')" class="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100"><i class="fas fa-trash-alt"></i></button>
+                        <button onclick="WardrobeApp.deleteItem(event, '${item.itemID}')" class="text-gray-300 hover:text-red-500 transition opacity-0 group-hover:opacity-100"><i class="fas fa-trash-alt"></i></button>
                     </div>
                     <div class="flex flex-wrap gap-1 mb-3">${tags}</div>
                     <div class="flex justify-between items-center">${badge}<button onclick="WardrobeApp.toggleLaundry('${item.itemID}')" class="text-xs font-bold text-[#8c7862] hover:text-[#4a4238] flex items-center gap-1"><i class="fas fa-sync-alt"></i> Toggle</button></div>

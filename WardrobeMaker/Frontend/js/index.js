@@ -1,33 +1,10 @@
-const LOCAL_API_HOSTS = [
-    'http://localhost:5000',
-    'http://localhost:7182',
-    'https://localhost:7182'
-];
-let resolvedApiHost = '';
-
-async function resolveApiHost() {
-    if (resolvedApiHost) return resolvedApiHost;
-    for (const host of LOCAL_API_HOSTS) {
-        try {
-            const response = await fetch(`${host}/api/wardrobe/stats`, { 
-                method: 'GET', 
-                mode: 'cors',
-                signal: AbortSignal.timeout(1200) 
-            });
-            if (response.ok) {
-                resolvedApiHost = host;
-                return resolvedApiHost;
-            }
-        } catch { continue; }
+const getApiUrl = async (path) => {
+    if (window.WardrobeCore && typeof window.WardrobeCore.getApiUrl === 'function') {
+        return await window.WardrobeCore.getApiUrl(path);
     }
-    resolvedApiHost = LOCAL_API_HOSTS[0];
-    return resolvedApiHost;
-}
-
-async function getApiUrl(path) {
-    const host = window.location.protocol === 'file:' ? await resolveApiHost() : '';
-    return `${host}/api/wardrobe${path}`;
-}
+    // Fallback to default local path
+    return `/api/wardrobe${path}`;
+};
 
 async function loadStats() {
     try {

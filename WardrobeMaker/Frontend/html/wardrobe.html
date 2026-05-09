@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="stylesheet" href="../css/wardrobe.css" />
 </head>
-<body class="bg-[#f9f7f4] pb-20">
+<body class="page-transition bg-[#f9f7f4] pb-20">
 
 <nav class="bg-white/90 backdrop-blur-md px-6 md:px-12 py-4 flex flex-col md:flex-row justify-between items-center fixed top-0 left-0 right-0 z-50 shadow-sm border-b border-[#e6e0d5]">
   
@@ -112,8 +112,8 @@
     </div>
   </main>
 
-  <div id="addItemModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4" onclick="if(event.target === this) WardrobeApp.closeModal()">
-      <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+  <div id="addItemModal" class="app-modal fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4" onclick="if(event.target === this) WardrobeApp.closeModal()">
+      <div class="modal-panel add-item-modal-card bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
           <button onclick="WardrobeApp.closeModal()" class="absolute top-6 right-6 text-gray-300 hover:text-gray-600 transition">
               <i class="fas fa-times text-xl"></i>
           </button>
@@ -177,12 +177,13 @@
               
               <div class="flex gap-3 pt-2">
                   <button type="button" onclick="WardrobeApp.closeModal()" class="flex-1 py-3 text-gray-500 font-bold rounded-xl hover:bg-gray-50 transition">Cancel</button>
-                  <button type="button" onclick="WardrobeApp.saveItem()" class="flex-1 py-3 bg-[#8c7862] text-white rounded-xl font-bold shadow-lg hover:bg-[#4a4238] transition">Save Item</button>
-              </div>
-          </div>
-      </div>
+                  <button type="button" onclick="WardrobeApp.saveItem(this)" class="flex-1 py-3 bg-[#8c7862] text-white rounded-xl font-bold shadow-lg hover:bg-[#4a4238] transition">Save Item</button>
+               </div>
+           </div>
+       </div>
   </div>
 
+  <script src="../js/main.js"></script>
   <script src="../js/wardrobe.js"></script>
 </body>
 </html>

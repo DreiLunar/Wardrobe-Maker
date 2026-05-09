@@ -89,6 +89,49 @@ namespace WardrobeMaker
             SaveData();
         }
 
+        public bool HasDuplicateOutfit(Outfit candidate)
+        {
+            if (candidate == null)
+                return false;
+
+            return Lookbook.Any(existing =>
+            {
+                var sameShoes = existing.SelectedShoes.ItemID == candidate.SelectedShoes.ItemID;
+                if (!sameShoes) return false;
+
+                if (candidate.SelectedDress != null)
+                {
+                    return existing.SelectedDress?.ItemID == candidate.SelectedDress.ItemID;
+                }
+
+                return existing.SelectedDress == null &&
+                       existing.SelectedTop?.ItemID == candidate.SelectedTop?.ItemID &&
+                       existing.SelectedBottom?.ItemID == candidate.SelectedBottom?.ItemID;
+            });
+        }
+
+        public bool HasDuplicateOutfit(string? topId, string? bottomId, string? dressId, string? shoesId)
+        {
+            if (string.IsNullOrWhiteSpace(shoesId))
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(dressId))
+            {
+                return Lookbook.Any(outfit =>
+                    outfit.SelectedDress?.ItemID == dressId &&
+                    outfit.SelectedShoes.ItemID == shoesId);
+            }
+
+            if (string.IsNullOrWhiteSpace(topId) || string.IsNullOrWhiteSpace(bottomId))
+                return false;
+
+            return Lookbook.Any(outfit =>
+                outfit.SelectedDress == null &&
+                outfit.SelectedTop?.ItemID == topId &&
+                outfit.SelectedBottom?.ItemID == bottomId &&
+                outfit.SelectedShoes.ItemID == shoesId);
+        }
+
         public void UpdateSchedule(string date, string outfitId)
         {
             if (!Schedules.ContainsKey(date))
@@ -104,7 +147,7 @@ namespace WardrobeMaker
             SaveData();
         }
 
-        public void RemoveSchedule(string date, string outfitId = null)
+        public void RemoveSchedule(string date, string? outfitId = null)
         {
             if (!Schedules.ContainsKey(date))
                 return;

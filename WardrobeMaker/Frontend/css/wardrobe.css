@@ -215,3 +215,34 @@
     background-color: #f2ede4;
     color: #8c7862;
 }
+
+.add-item-modal-card {
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    padding-right: 12px; /* keep scrollbar visually inside */
+    clip-path: inset(0 round 2.5rem);
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: #b8ab9b #f4f1eb;
+}
+
+.add-item-modal-card::-webkit-scrollbar {
+    width: 10px;
+}
+
+.add-item-modal-card::-webkit-scrollbar-track {
+    background: #f4f1eb;
+    border-radius: 9999px;
+    margin-block: 12px;
+}
+
+.add-item-modal-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #c2b6a8 0%, #8c7862 100%);
+    border-radius: 9999px;
+    border: 2px solid #f4f1eb;
+}
+
+.add-item-modal-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #aa9b89 0%, #766552 100%);
+}

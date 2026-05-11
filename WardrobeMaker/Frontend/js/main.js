@@ -44,7 +44,9 @@ async function resolveApiHost() {
                 resolvedApiHost = host;
                 return resolvedApiHost;
             }
-        } catch {}
+        } catch (error) {
+            console.warn(`[Wardrobe Maker] API host probe failed for ${host}`, error);
+        }
     }
 
     resolvedApiHost = LOCAL_API_HOSTS[0];
@@ -53,32 +55,43 @@ async function resolveApiHost() {
 
 let _apiBase = null;
 
+async function canReachApi(apiBase) {
+    try {
+        const response = await fetch(`${apiBase}/stats`, { method: 'GET', cache: 'no-store' });
+        return response.ok;
+    } catch (error) {
+        console.warn(`[Wardrobe Maker] API base probe failed for ${apiBase}`, error);
+        return false;
+    }
+}
+
 async function resolveApiBase() {
     if (_apiBase !== null) return _apiBase;
 
-    // When served from file:, use the local host resolver (same behaviour as before)
+    // When served from file:, always use localhost backend hosts.
     if (window.location.protocol === 'file:') {
         const host = await resolveApiHost();
         _apiBase = `${host}/api/wardrobe`;
         return _apiBase;
     }
 
-    // When served over HTTP(S), probe likely prefixes once and cache result.
-    const candidates = ['/api/wardrobe', ''];
-    for (const prefix of candidates) {
-        try {
-            const probe = await fetch(`${prefix}/lookbook`, { method: 'GET', cache: 'no-store' });
-            if (probe.ok) {
-                _apiBase = prefix || '';
-                return _apiBase;
-            }
-        } catch (e) {
-            // try next
-        }
+    // Prefer same-origin when frontend is served by ASP.NET static files.
+    const sameOriginApiBase = '/api/wardrobe';
+    if (await canReachApi(sameOriginApiBase)) {
+        _apiBase = sameOriginApiBase;
+        return _apiBase;
     }
 
-    // Fallback to empty prefix
-    _apiBase = '';
+    // Otherwise (e.g., Live Server at 127.0.0.1:5500), fall back to known local backend hosts.
+    const host = await resolveApiHost();
+    const crossOriginApiBase = `${host}/api/wardrobe`;
+    if (await canReachApi(crossOriginApiBase)) {
+        _apiBase = crossOriginApiBase;
+        return _apiBase;
+    }
+
+    // Final fallback keeps endpoint shape correct and avoids resolving to frontend routes.
+    _apiBase = sameOriginApiBase;
     return _apiBase;
 }
 

@@ -142,66 +142,59 @@
   ],
   "lookbook": [
     {
-      "outfitID": "OFT-1778339861787",
+      "outfitID": "OFT-1778482595639",
       "outfitName": "Curated Look",
-      "topID": "TOP-1778048469663",
+      "topID": "TOP-1778221953598",
       "bottomID": "BOT-1778051537823",
       "dressID": null,
       "shoesID": "FOO-1778051643759",
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778339954485",
+      "outfitID": "OFT-1778482601091",
       "outfitName": "Curated Look #2",
-      "topID": "TOP-1778221832235",
-      "bottomID": "BOT-1778051580837",
-      "dressID": null,
-      "shoesID": "FOO-1778051643759",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778339957862",
-      "outfitName": "Curated Look #3",
-      "topID": "TOP-1778221953598",
-      "bottomID": "BOT-1778051580837",
-      "dressID": null,
-      "shoesID": "FOO-1778051659733",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778339961111",
-      "outfitName": "Curated Look #4",
-      "topID": "TOP-1778221953598",
-      "bottomID": "BOT-1778051537823",
-      "dressID": null,
-      "shoesID": "FOO-1778051659733",
-      "scheduledDate": null
-    },
-    {
-      "outfitID": "OFT-1778339964075",
-      "outfitName": "Curated Look #5",
       "topID": "TOP-1778048469663",
       "bottomID": "BOT-1778051559490",
       "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778482605564",
+      "outfitName": "Curated Look #3",
+      "topID": "TOP-1778221953598",
+      "bottomID": "BOT-1778222063215",
+      "dressID": null,
       "shoesID": "FOO-1778051643759",
       "scheduledDate": null
     },
     {
-      "outfitID": "OFT-1778339967037",
+      "outfitID": "OFT-1778482608670",
+      "outfitName": "Curated Look #4",
+      "topID": "TOP-1778051366421",
+      "bottomID": "BOT-1778051537823",
+      "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778482614461",
+      "outfitName": "Curated Look #5",
+      "topID": "TOP-1778221832235",
+      "bottomID": "BOT-1778051580837",
+      "dressID": null,
+      "shoesID": "FOO-1778051659733",
+      "scheduledDate": null
+    },
+    {
+      "outfitID": "OFT-1778482621623",
       "outfitName": "Curated Look #6",
-      "topID": "TOP-1778221953598",
-      "bottomID": "BOT-1778222063215",
+      "topID": "TOP-1778051366421",
+      "bottomID": "BOT-1778051559490",
       "dressID": null,
       "shoesID": "FOO-1778051659733",
       "scheduledDate": null
     }
   ],
-  "schedules": {
-    "2026-05-09": [
-      "OFT-1778339861787",
-      "OFT-1778339954485",
-      "OFT-1778339957862",
-      "OFT-1778339961111"
-    ]
-  }
+  "schedules": {}
 }

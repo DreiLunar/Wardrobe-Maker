@@ -92,7 +92,7 @@
 /* Flashcard Overlay */
 #flashcardOverlay {
     position: fixed; inset: 0; background: rgba(74, 66, 56, 0.5);
-    z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+    z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);
 }
 .flashcard {
     background: white; padding: 2.5rem; border-radius: 2.5rem; width: 90%; max-width: 400px;

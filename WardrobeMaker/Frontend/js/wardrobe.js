@@ -55,42 +55,27 @@ const WardrobeApp = {
     openAnimatedModal(modal) {
         if (!modal) return;
         modal.classList.remove('modal-closing');
-        modal.classList.remove('hidden');
-        modal.classList.add('modal-open');
-        modal.style.display = 'flex';
-        modal.style.opacity = '1';
-        modal.style.pointerEvents = 'auto';
-        const panel = modal.querySelector('.modal-panel');
-        if (panel) {
-            panel.classList.remove('hidden');
-            panel.classList.remove('opacity-0', 'scale-95');
-            panel.style.display = 'block';
-            panel.style.visibility = 'visible';
-            panel.style.opacity = '1';
-            panel.style.transform = 'translateY(0) scale(1)';
+        if (window.WardrobeCore?.openModal) {
+            window.WardrobeCore.openModal(modal);
+            return;
         }
+        modal.classList.remove('hidden');
+        modal.style.display = 'flex';
         requestAnimationFrame(() => modal.classList.add('modal-open'));
     },
 
     closeAnimatedModal(modal) {
         if (!modal) return;
+        if (window.WardrobeCore?.closeModal) {
+            window.WardrobeCore.closeModal(modal);
+            return;
+        }
         modal.classList.remove('modal-open');
         modal.classList.add('modal-closing');
-        const panel = modal.querySelector('.modal-panel');
-        if (panel) {
-            panel.style.opacity = '';
-            panel.style.transform = '';
-            panel.style.visibility = '';
-        }
         setTimeout(() => {
             modal.classList.remove('modal-closing');
             modal.style.display = 'none';
             modal.classList.add('hidden');
-            modal.style.opacity = '';
-            modal.style.pointerEvents = '';
-            if (panel) {
-                panel.style.display = '';
-            }
         }, 200);
     },
 

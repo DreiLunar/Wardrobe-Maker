@@ -89,9 +89,9 @@
 
 ## 👥 Team
 
-- **Von Andrei Lunar** — Project Lead ([DreiLunar](https://github.com/DreiLunar))
-- **Christine Nicole Miranda** — Frontend Developer ([tinintinti](https://github.com/tinintinti))
-- **R Jay Arazula** — Backend Developer ([Rjay29](https://github.com/Rjay29))
+- **Von Andrei Lunar** — Project Manager ([DreiLunar](https://github.com/DreiLunar))
+- **Christine Nicole Miranda** — GUI ([tinintinti](https://github.com/tinintinti))
+- **R Jay Arazula** — Logic Developer / Tester ([Rjay29](https://github.com/Rjay29))
 
 ---
 

@@ -75,7 +75,7 @@
 
 > Add the UML class diagram image below.
 
-![UML Class Diagram](WardrobeMaker/Frontend/images/uml-class-diagram.png)
+![UML Class Diagram](WardrobeMaker/Frontend/images/uml-class-diagram.jpg)
 
 ---
 

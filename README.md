@@ -63,15 +63,11 @@
 
 ## 🔀 Flowchart (Create Outfit Function)
 
-> Add the flowchart image for the **Create Outfit** function below.
-
 ![Create Outfit Flowchart](WardrobeMaker/Frontend/images/create-outfit-flowchart.png)
 
 ---
 
 ## 🧩 UML Class Diagram
-
-> Add the UML class diagram image below.
 
 ![UML Class Diagram](WardrobeMaker/Frontend/images/uml-class-diagram.jpg)
 

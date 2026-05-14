@@ -89,9 +89,73 @@
 
 ## 👥 Team
 
-- **Von Andrei Lunar** — Project Manager ([DreiLunar](https://github.com/DreiLunar))
-- **Christine Nicole Miranda** — GUI ([tinintinti](https://github.com/tinintinti))
-- **R Jay Arazula** — Logic Developer / Tester ([Rjay29](https://github.com/Rjay29))
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/DreiLunar">
+        <img src="https://github.com/DreiLunar.png" width="100px;" alt=""/>
+      </a>
+      <br />
+      <sub><b>Lunar, Von Andrei G.</b></sub>
+      <br />
+      <sub><b>Project Manager</b></sub>
+      <br />
+      <a href="https://github.com/DreiLunar">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://instagram.com/drei.lunar">
+        <img src="https://img.shields.io/badge/Instagram-E4405F?style=flat&logo=instagram&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://discordapp.com/users/551348088963465236">
+        <img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" />
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/tinintinti">
+        <img src="https://github.com/tinintinti.png" width="100px;" alt=""/>
+      </a>
+      <br />
+      <sub><b>Miranda, Christine Nicole</b></sub>
+      <br />
+      <sub><b>GUI</b></sub>
+      <br />
+      <a href="https://github.com/tinintinti">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://www.instagram.com/tine_ncl/">
+        <img src="https://img.shields.io/badge/Instagram-E4405F?style=flat&logo=instagram&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://discordapp.com/users/938997025708605590">
+        <img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" />
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Rjay29">
+        <img src="https://github.com/Rjay29.png" width="100px;" alt=""/>
+      </a>
+      <br />
+      <sub><b>Arazula, Rjay D.</b></sub>
+      <br />
+      <sub><b>Logic Developer / Tester</b></sub>
+      <br />
+      <a href="https://github.com/Rjay29">
+        <img src="https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://www.instagram.com/rj_iov/">
+        <img src="https://img.shields.io/badge/Instagram-E4405F?style=flat&logo=instagram&logoColor=white" />
+      </a>
+      <br />
+      <a href="https://discordapp.com/users/551348088963465236">
+        <img src="https://img.shields.io/badge/Discord-5865F2?style=flat&logo=discord&logoColor=white" />
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 

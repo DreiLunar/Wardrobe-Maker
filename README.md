@@ -111,7 +111,7 @@
         <img src="https://github.com/tinintinti.png" width="100px;" alt=""/>
       </a>
       <br />
-      <sub><b>Miranda, Christine Nicole</b></sub>
+      <sub><b>Miranda, Christine Nicole P.</b></sub>
       <br />
       <sub><b>GUI</b></sub>
       <br />

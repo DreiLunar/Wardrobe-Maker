@@ -1,6 +1,6 @@
 <div align="center">
 
-![Wardrobe Maker Logo](WardrobeMaker/Frontend/images/Wardrobe-Maker-Logo.jpg)
+![Wardrobe Maker Logo](WardrobeMaker/Frontend/images/Wardrobe-Maker-Logo.png)
 
 > A full-stack wardrobe management app for organizing clothes, building outfits, planning schedules, and curating a personal lookbook.
 

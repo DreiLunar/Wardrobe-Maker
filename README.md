@@ -1,5 +1,7 @@
 <div align="center">
 
+![Wardrobe Maker Logo](WardrobeMaker/Frontend/images/Wardrobe-Maker-Logo.jpg)
+
 # 👗 Wardrobe Maker
 
 > A full-stack wardrobe management app for organizing clothes, building outfits, planning schedules, and curating a personal lookbook.
@@ -57,9 +59,7 @@
 
 ## 📸 Screenshots
 
-> Add your latest UI screenshots here (Home, Wardrobe, Create, Calendar, Lookbook).
-
-- `WardrobeMaker/Frontend/images/` can be used to store screenshot assets.
+![Home Page](WardrobeMaker/Frontend/images/Home-Page.png)
 
 ---
 
